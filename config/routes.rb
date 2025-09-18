@@ -14,35 +14,38 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
-  # Root path
-  root 'products#index'
+  # Store routes (ストアフロント)
+  namespace :store do
+    root 'home#index'
+    
+    resources :products, only: [:index, :show] do
+      member do
+        post :add_to_cart
+      end
+    end
 
-  # Product routes
-  resources :products do
-    member do
-      post :add_to_cart
+    get 'cart', to: 'cart#show'
+    post 'cart/add_item', to: 'cart#add_item'
+    patch 'cart/update_item', to: 'cart#update_item'
+    delete 'cart/remove_item', to: 'cart#remove_item'
+    delete 'cart/clear', to: 'cart#clear'
+
+    resources :orders, only: [:index, :show, :new, :create] do
+      member do
+        patch :cancel
+      end
     end
   end
 
-  # Cart routes
-  get 'cart', to: 'cart#show'
-  post 'cart/add_item', to: 'cart#add_item'
-  patch 'cart/update_item', to: 'cart#update_item'
-  delete 'cart/remove_item', to: 'cart#remove_item'
-  delete 'cart/clear', to: 'cart#clear'
-
-  # Order routes
-  resources :orders, only: [:index, :show, :new, :create] do
-    member do
-      patch :cancel
-    end
-  end
-
-  # Admin routes
+  # Admin routes (管理画面)
   namespace :admin do
+    root 'dashboard#index'
+    
     resources :products
     resources :categories
     resources :orders, only: [:index, :show, :update]
-    root 'dashboard#index'
   end
+
+  # Root path redirects to store
+  root 'store/home#index'
 end

@@ -1,4 +1,4 @@
-class OrdersController < ApplicationController
+class Store::OrdersController < Store::BaseController
   before_action :set_order, only: [:show, :cancel]
 
   def index
@@ -14,12 +14,12 @@ class OrdersController < ApplicationController
 
   def new
     @cart = current_user.cart
-    redirect_to cart_path, alert: 'カートが空です。' if @cart.empty?
+    redirect_to store_cart_path, alert: 'カートが空です。' if @cart.empty?
   end
 
   def create
     @cart = current_user.cart
-    redirect_to cart_path, alert: 'カートが空です。' and return if @cart.empty?
+    redirect_to store_cart_path, alert: 'カートが空です。' and return if @cart.empty?
 
     @order = current_user.orders.build(
       subtotal: @cart.total_price,
@@ -34,7 +34,7 @@ class OrdersController < ApplicationController
     if @order.save
       @order.add_items_from_cart(@cart)
       @cart.cart_items.destroy_all
-      redirect_to @order, notice: '注文が正常に作成されました。'
+      redirect_to store_order_path(@order), notice: '注文が正常に作成されました。'
     else
       render :new
     end
@@ -43,9 +43,9 @@ class OrdersController < ApplicationController
   def cancel
     if @order.can_cancel?
       @order.update(status: 'cancelled')
-      redirect_to @order, notice: '注文をキャンセルしました。'
+      redirect_to store_order_path(@order), notice: '注文をキャンセルしました。'
     else
-      redirect_to @order, alert: 'この注文はキャンセルできません。'
+      redirect_to store_order_path(@order), alert: 'この注文はキャンセルできません。'
     end
   end
 

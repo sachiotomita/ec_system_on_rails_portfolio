@@ -14,7 +14,6 @@ RUN apt-get update -qq && \
     curl \
     nodejs \
     npm \
-    yarn \
     libvips \
     && rm -rf /var/lib/apt/lists/*
 

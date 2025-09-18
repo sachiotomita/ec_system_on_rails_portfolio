@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "EC Portfolio Store" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <!-- Store Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container">
+        <%= link_to "EC Portfolio Store", store_root_path, class: "navbar-brand fw-bold" %>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <%= link_to store_root_path, class: "nav-link" do %>
+                <i class="bi bi-house me-1"></i>ホーム
+              <% end %>
+            </li>
+            <li class="nav-item">
+              <%= link_to store_products_path, class: "nav-link" do %>
+                <i class="bi bi-grid-3x3-gap me-1"></i>商品一覧
+              <% end %>
+            </li>
+            <li class="nav-item">
+              <%= link_to store_cart_path, class: "nav-link" do %>
+                <i class="bi bi-cart me-1"></i>カート
+                <% if user_signed_in? && current_user.cart&.cart_items&.any? %>
+                  <span class="badge bg-danger ms-1"><%= current_user.cart.cart_items.sum(:quantity) %></span>
+                <% end %>
+              <% end %>
+            </li>
+            <li class="nav-item">
+              <%= link_to store_orders_path, class: "nav-link" do %>
+                <i class="bi bi-receipt me-1"></i>注文履歴
+              <% end %>
+            </li>
+          </ul>
+          
+          <ul class="navbar-nav">
+            <% if user_signed_in? %>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                  <i class="bi bi-person-circle me-1"></i><%= current_user.full_name %>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><%= link_to "プロフィール", edit_user_registration_path, class: "dropdown-item" %></li>
+                  <% if current_user.admin? %>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><%= link_to "管理画面", admin_root_path, class: "dropdown-item text-warning" %></li>
+                  <% end %>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "dropdown-item" %></li>
+                </ul>
+              </li>
+            <% else %>
+              <li class="nav-item">
+                <%= link_to "ログイン", new_user_session_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "新規登録", new_user_registration_path, class: "btn btn-outline-light btn-sm ms-2" %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <% if notice %>
+      <div class="alert alert-success alert-dismissible fade show m-0" role="alert">
+        <div class="container">
+          <%= notice %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      </div>
+    <% end %>
+    
+    <% if alert %>
+      <div class="alert alert-danger alert-dismissible fade show m-0" role="alert">
+        <div class="container">
+          <%= alert %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Main Content -->
+    <main>
+      <%= yield %>
+    </main>
+
+    <!-- Store Footer -->
+    <footer class="bg-dark text-light mt-5 py-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <h5 class="fw-bold">EC Portfolio Store</h5>
+            <p class="text-muted">Rails 8で構築されたポートフォリオ用ECサイトです。</p>
+            <div class="d-flex gap-3">
+              <a href="#" class="text-light"><i class="bi bi-twitter fs-4"></i></a>
+              <a href="#" class="text-light"><i class="bi bi-facebook fs-4"></i></a>
+              <a href="#" class="text-light"><i class="bi bi-instagram fs-4"></i></a>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <h6 class="fw-bold">ショッピング</h6>
+            <ul class="list-unstyled">
+              <li><%= link_to "商品一覧", store_products_path, class: "text-muted text-decoration-none" %></li>
+              <li><%= link_to "カテゴリ", store_products_path, class: "text-muted text-decoration-none" %></li>
+              <li><%= link_to "おすすめ商品", store_root_path, class: "text-muted text-decoration-none" %></li>
+            </ul>
+          </div>
+          <div class="col-md-2">
+            <h6 class="fw-bold">サポート</h6>
+            <ul class="list-unstyled">
+              <li><a href="#" class="text-muted text-decoration-none">お問い合わせ</a></li>
+              <li><a href="#" class="text-muted text-decoration-none">配送について</a></li>
+              <li><a href="#" class="text-muted text-decoration-none">返品・交換</a></li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <h6 class="fw-bold">技術スタック</h6>
+            <ul class="list-unstyled text-muted">
+              <li>Ruby on Rails 8</li>
+              <li>PostgreSQL</li>
+              <li>Bootstrap 5</li>
+              <li>Docker</li>
+            </ul>
+          </div>
+        </div>
+        <hr class="my-4">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <p class="text-muted mb-0">&copy; 2024 EC Portfolio Store. All rights reserved.</p>
+          </div>
+          <div class="col-md-6 text-end">
+            <small class="text-muted">ポートフォリオ用プロジェクト</small>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
