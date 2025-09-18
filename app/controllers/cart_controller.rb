@@ -16,7 +16,12 @@ class CartController < ApplicationController
 
     if product.in_stock?
       @cart.add_product(product, quantity)
-      @cart.save_to_session(session) unless user_signed_in?
+      
+      # ゲストユーザーの場合はセッションに保存
+      unless user_signed_in?
+        @cart.save_to_session(session)
+        session[:cart_id] = @cart.id if @cart.id
+      end
       
       if request.xhr?
         render json: { 
@@ -44,7 +49,11 @@ class CartController < ApplicationController
     quantity = params[:quantity].to_i
 
     @cart.update_quantity(product, quantity)
-    @cart.save_to_session(session) unless user_signed_in?
+    
+    # ゲストユーザーの場合はセッションに保存
+    unless user_signed_in?
+      @cart.save_to_session(session)
+    end
     
     if request.xhr?
       render json: { 
@@ -60,7 +69,11 @@ class CartController < ApplicationController
   def remove_item
     product = Product.find(params[:product_id])
     @cart.remove_product(product)
-    @cart.save_to_session(session) unless user_signed_in?
+    
+    # ゲストユーザーの場合はセッションに保存
+    unless user_signed_in?
+      @cart.save_to_session(session)
+    end
     
     if request.xhr?
       render json: { 
@@ -105,8 +118,9 @@ class CartController < ApplicationController
     else
       # セッションベースのカート（ゲスト用）
       @cart = Cart.new
-      @cart.id = session[:cart_id] if session[:cart_id]
       @cart.load_from_session(session[:cart_items] || {})
+      # カートIDをセッションに保存
+      session[:cart_id] = @cart.id if @cart.id
     end
   end
 end

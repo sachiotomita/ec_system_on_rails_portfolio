@@ -1,11 +1,16 @@
 class Order < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, optional: true
   has_many :order_items, dependent: :destroy
   has_many :products, through: :order_items
 
   validates :order_number, presence: true, uniqueness: true
   validates :subtotal, presence: true, numericality: { greater_than: 0 }
   validates :total_amount, presence: true, numericality: { greater_than: 0 }
+  
+  # ゲスト注文用のバリデーション
+  validates :guest_name, presence: true, if: -> { user.nil? }
+  validates :guest_email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }, if: -> { user.nil? }
+  validates :guest_phone, presence: true, if: -> { user.nil? }
 
   before_validation :generate_order_number, on: :create
   before_validation :calculate_totals

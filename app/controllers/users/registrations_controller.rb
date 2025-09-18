@@ -10,9 +10,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   # POST /resource
-  # def create
-  #   super
-  # end
+  def create
+    super do |resource|
+      if resource.persisted?
+        # 新規登録成功時に500ポイントを付与
+        resource.add_points(500, "新規登録特典")
+      end
+    end
+  end
 
   # GET /resource/edit
   # def edit

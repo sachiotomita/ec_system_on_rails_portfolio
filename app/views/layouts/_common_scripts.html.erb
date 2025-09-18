@@ -1,3 +1,29 @@
+<style>
+  /* カルーセルスタイル */
+  .carousel-slide {
+    display: none;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .carousel-slide.active {
+    display: block;
+  }
+  
+  .carousel-dot.active {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  /* カルーセルボタンホバー効果 */
+  #prev-btn:hover, #next-btn:hover {
+    transform: translateY(-50%) scale(1.1);
+  }
+</style>
+
 <script>
   function toggleDropdown() {
     const dropdown = document.getElementById('userDropdown');
@@ -16,5 +42,66 @@
     if (dropdown && !dropdown.contains(event.target) && !button) {
       dropdown.classList.add('hidden');
     }
+  });
+
+  // カルーセル機能
+  document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.getElementById('hero-carousel');
+    if (!carousel) return;
+    
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    const dots = document.querySelectorAll('.carousel-dot');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    
+    let currentSlide = 0;
+    const totalSlides = slides.length;
+    
+    // スライドを表示する関数
+    function showSlide(index) {
+      // すべてのスライドを非表示
+      slides.forEach(slide => slide.classList.remove('active'));
+      dots.forEach(dot => dot.classList.remove('active'));
+      
+      // 現在のスライドを表示
+      slides[index].classList.add('active');
+      dots[index].classList.add('active');
+    }
+    
+    // 次のスライドに移動
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      showSlide(currentSlide);
+    }
+    
+    // 前のスライドに移動
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      showSlide(currentSlide);
+    }
+    
+    // 特定のスライドに移動
+    function goToSlide(index) {
+      currentSlide = index;
+      showSlide(currentSlide);
+    }
+    
+    // イベントリスナーを追加
+    if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+    if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+    
+    // ドットクリックイベント
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => goToSlide(index));
+    });
+    
+    // 自動スライド（5秒間隔）
+    setInterval(nextSlide, 5000);
+    
+    // キーボードナビゲーション
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'ArrowLeft') prevSlide();
+      if (event.key === 'ArrowRight') nextSlide();
+    });
   });
 </script>

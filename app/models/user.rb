@@ -11,6 +11,7 @@ class User < ApplicationRecord
   has_one :cart, dependent: :destroy
   has_many :orders, dependent: :destroy
   has_many :reviews, dependent: :destroy
+  has_many :user_points, dependent: :destroy
 
   validates :first_name, presence: true
   validates :last_name, presence: true
@@ -21,5 +22,13 @@ class User < ApplicationRecord
 
   def admin?
     admin
+  end
+
+  def total_points
+    user_points.sum(:points)
+  end
+
+  def add_points(points, description = "ポイント獲得")
+    user_points.create!(points: points, description: description)
   end
 end

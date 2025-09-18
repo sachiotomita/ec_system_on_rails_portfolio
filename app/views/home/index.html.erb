@@ -12,8 +12,85 @@
         <%# end %>
       </div>
       <div class="text-center lg:text-right">
-        <div class="inline-flex items-center justify-center w-32 h-32 bg-white bg-opacity-20 rounded-full">
-          <%#= icon('shopping-cart', size: 64, class_name: "text-white") %>
+        <!-- 画像カルーセル -->
+        <div class="relative w-full max-w-md mx-auto lg:mx-0">
+          <div id="hero-carousel" class="relative overflow-hidden rounded-2xl shadow-2xl">
+            <!-- カルーセル画像1: セール情報 -->
+            <div class="carousel-slide active">
+              <%= link_to products_path, class: "block" do %>
+                <div class="bg-gradient-to-br from-red-500 to-pink-600 p-8 text-center hover:from-red-600 hover:to-pink-700 transition-all duration-300">
+                  <div class="text-6xl mb-4">🔥</div>
+                  <h3 class="text-2xl font-bold mb-2">最大50%OFF</h3>
+                  <p class="text-lg opacity-90">期間限定セール開催中！</p>
+                  <div class="mt-4">
+                    <span class="bg-white text-red-600 px-4 py-2 rounded-full text-sm font-bold hover:bg-red-50 transition-colors">今すぐチェック</span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            
+            <!-- カルーセル画像2: 新商品 -->
+            <div class="carousel-slide">
+              <%= link_to products_path, class: "block" do %>
+                <div class="bg-gradient-to-br from-blue-500 to-purple-600 p-8 text-center hover:from-blue-600 hover:to-purple-700 transition-all duration-300">
+                  <div class="text-6xl mb-4">✨</div>
+                  <h3 class="text-2xl font-bold mb-2">新商品入荷</h3>
+                  <p class="text-lg opacity-90">最新トレンドアイテム</p>
+                  <div class="mt-4">
+                    <span class="bg-white text-blue-600 px-4 py-2 rounded-full text-sm font-bold hover:bg-blue-50 transition-colors">新商品を見る</span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            
+            <!-- カルーセル画像3: 無料配送 -->
+            <div class="carousel-slide">
+              <%= link_to products_path, class: "block" do %>
+                <div class="bg-gradient-to-br from-green-500 to-teal-600 p-8 text-center hover:from-green-600 hover:to-teal-700 transition-all duration-300">
+                  <div class="text-6xl mb-4">🚚</div>
+                  <h3 class="text-2xl font-bold mb-2">無料配送</h3>
+                  <p class="text-lg opacity-90">5,000円以上で送料無料</p>
+                  <div class="mt-4">
+                    <span class="bg-white text-green-600 px-4 py-2 rounded-full text-sm font-bold hover:bg-green-50 transition-colors">条件を確認</span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            
+            <!-- カルーセル画像4: 会員特典 -->
+            <div class="carousel-slide">
+              <%= link_to new_user_registration_path, class: "block" do %>
+                <div class="bg-gradient-to-br from-yellow-500 to-orange-600 p-8 text-center hover:from-yellow-600 hover:to-orange-700 transition-all duration-300">
+                  <div class="text-6xl mb-4">🎁</div>
+                  <h3 class="text-2xl font-bold mb-2">会員特典</h3>
+                  <p class="text-lg opacity-90">初回購入10%OFF</p>
+                  <div class="mt-4">
+                    <span class="bg-white text-yellow-600 px-4 py-2 rounded-full text-sm font-bold hover:bg-yellow-50 transition-colors">会員登録</span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          
+          <!-- カルーセルナビゲーション -->
+          <div class="flex justify-center mt-4 space-x-2">
+            <button class="carousel-dot active w-3 h-3 rounded-full bg-white bg-opacity-50 hover:bg-opacity-75 transition-all" data-slide="0"></button>
+            <button class="carousel-dot w-3 h-3 rounded-full bg-white bg-opacity-50 hover:bg-opacity-75 transition-all" data-slide="1"></button>
+            <button class="carousel-dot w-3 h-3 rounded-full bg-white bg-opacity-50 hover:bg-opacity-75 transition-all" data-slide="2"></button>
+            <button class="carousel-dot w-3 h-3 rounded-full bg-white bg-opacity-50 hover:bg-opacity-75 transition-all" data-slide="3"></button>
+          </div>
+          
+          <!-- 前へ/次へボタン -->
+          <button id="prev-btn" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </button>
+          <button id="next-btn" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
