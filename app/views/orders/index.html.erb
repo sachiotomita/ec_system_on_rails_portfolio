@@ -1,0 +1,69 @@
+<div class="row">
+  <div class="col-12">
+    <h1 class="mb-4">注文履歴</h1>
+    
+    <% if @orders.any? %>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>注文番号</th>
+              <th>注文日</th>
+              <th>商品数</th>
+              <th>合計金額</th>
+              <th>ステータス</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @orders.each do |order| %>
+              <tr>
+                <td><%= order.order_number %></td>
+                <td><%= order.created_at.strftime("%Y年%m月%d日") %></td>
+                <td><%= order.order_items.sum(:quantity) %>個</td>
+                <td>¥<%= number_with_delimiter(order.total_amount) %></td>
+                <td>
+                  <span class="badge bg-<%= case order.status
+                    when 'pending' then 'warning'
+                    when 'processing' then 'info'
+                    when 'shipped' then 'primary'
+                    when 'delivered' then 'success'
+                    when 'cancelled' then 'danger'
+                    else 'secondary'
+                  end %>">
+                    <%= case order.status
+                      when 'pending' then '注文受付中'
+                      when 'processing' then '処理中'
+                      when 'shipped' then '発送済み'
+                      when 'delivered' then '配送完了'
+                      when 'cancelled' then 'キャンセル'
+                      else order.status
+                    end %>
+                  </span>
+                </td>
+                <td>
+                  <%= link_to "詳細", order_path(order), class: "btn btn-outline-primary btn-sm" %>
+                  <% if order.can_cancel? %>
+                    <%= link_to "キャンセル", cancel_order_path(order), method: :patch, 
+                                class: "btn btn-outline-danger btn-sm", 
+                                data: { confirm: "この注文をキャンセルしますか？" } %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="d-flex justify-content-center">
+        <%= paginate @orders %>
+      </div>
+    <% else %>
+      <div class="text-center py-5">
+        <h3 class="text-muted">注文履歴がありません</h3>
+        <p class="text-muted">商品を購入すると、ここに注文履歴が表示されます。</p>
+        <%= link_to "商品一覧を見る", products_path, class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

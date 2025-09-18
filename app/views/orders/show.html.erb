@@ -1,0 +1,125 @@
+<div class="row">
+  <div class="col-12">
+    <h1 class="mb-4">注文詳細</h1>
+    
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">注文情報</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>注文番号:</strong> <%= @order.order_number %></p>
+                <p><strong>注文日:</strong> <%= @order.created_at.strftime("%Y年%m月%d日 %H:%M") %></p>
+                <p><strong>ステータス:</strong> 
+                  <span class="badge bg-<%= case @order.status
+                    when 'pending' then 'warning'
+                    when 'processing' then 'info'
+                    when 'shipped' then 'primary'
+                    when 'delivered' then 'success'
+                    when 'cancelled' then 'danger'
+                    else 'secondary'
+                  end %>">
+                    <%= case @order.status
+                      when 'pending' then '注文受付中'
+                      when 'processing' then '処理中'
+                      when 'shipped' then '発送済み'
+                      when 'delivered' then '配送完了'
+                      when 'cancelled' then 'キャンセル'
+                      else @order.status
+                    end %>
+                  </span>
+                </p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>支払い方法:</strong> <%= @order.payment_method %></p>
+                <p><strong>支払いステータス:</strong> 
+                  <span class="badge bg-<%= case @order.payment_status
+                    when 'pending' then 'warning'
+                    when 'paid' then 'success'
+                    when 'failed' then 'danger'
+                    when 'refunded' then 'info'
+                    else 'secondary'
+                  end %>">
+                    <%= case @order.payment_status
+                      when 'pending' then '未払い'
+                      when 'paid' then '支払い済み'
+                      when 'failed' then '支払い失敗'
+                      when 'refunded' then '返金済み'
+                      else @order.payment_status
+                    end %>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card mt-4">
+          <div class="card-header">
+            <h5 class="mb-0">注文商品</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>商品名</th>
+                    <th>単価</th>
+                    <th>数量</th>
+                    <th>小計</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @order_items.each do |item| %>
+                    <tr>
+                      <td><%= item.product_name %></td>
+                      <td>¥<%= number_with_delimiter(item.unit_price) %></td>
+                      <td><%= item.quantity %></td>
+                      <td>¥<%= number_with_delimiter(item.total_price) %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">合計金額</h5>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between mb-2">
+              <span>小計:</span>
+              <span>¥<%= number_with_delimiter(@order.subtotal) %></span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>送料:</span>
+              <span>¥<%= number_with_delimiter(@order.shipping_amount) %></span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>消費税:</span>
+              <span>¥<%= number_with_delimiter(@order.tax_amount) %></span>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between mb-3">
+              <span class="fw-bold">合計:</span>
+              <span class="fw-bold">¥<%= number_with_delimiter(@order.total_amount) %></span>
+            </div>
+            
+            <% if @order.can_cancel? %>
+              <%= link_to "注文をキャンセル", cancel_order_path(@order), method: :patch, 
+                          class: "btn btn-outline-danger w-100", 
+                          data: { confirm: "この注文をキャンセルしますか？" } %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

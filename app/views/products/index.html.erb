@@ -1,0 +1,160 @@
+<div class="row">
+  <div class="col-12">
+    <% if request.path == root_path %>
+      <!-- ホームページ用のヒーローセクション -->
+      <div class="jumbotron bg-primary text-white rounded p-5 mb-5">
+        <div class="container-fluid">
+          <h1 class="display-4 fw-bold">EC Portfolio Store</h1>
+          <p class="lead">Rails 8で構築されたポートフォリオ用ECサイトへようこそ！</p>
+          <p>最新の技術スタックで作られた、モダンなECシステムをお試しください。</p>
+        </div>
+      </div>
+      
+      <!-- フィーチャー商品セクション -->
+      <% if @featured_products.any? %>
+        <div class="mb-5">
+          <h2 class="mb-4">
+            <i class="bi bi-star-fill text-warning me-2"></i>おすすめ商品
+          </h2>
+          <div class="row">
+            <% @featured_products.each do |product| %>
+              <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                  <% if product.primary_image %>
+                    <%= image_tag product.primary_image.image, class: "card-img-top", style: "height: 200px; object-fit: cover;" %>
+                  <% else %>
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                      <span class="text-muted">画像なし</span>
+                    </div>
+                  <% end %>
+                  
+                  <div class="card-body d-flex flex-column">
+                    <h5 class="card-title"><%= product.name %></h5>
+                    <p class="card-text text-muted small"><%= product.short_description&.truncate(100) %></p>
+                    
+                    <div class="mt-auto">
+                      <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                          <% if product.on_sale? %>
+                            <span class="text-decoration-line-through text-muted">¥<%= number_with_delimiter(product.price) %></span>
+                            <span class="text-danger fw-bold">¥<%= number_with_delimiter(product.sale_price) %></span>
+                          <% else %>
+                            <span class="fw-bold">¥<%= number_with_delimiter(product.price) %></span>
+                          <% end %>
+                        </div>
+                        <span class="badge bg-warning text-dark">おすすめ</span>
+                      </div>
+                      
+                      <div class="d-grid gap-2">
+                        <%= link_to product_path(product), class: "btn btn-outline-primary btn-sm" do %>
+                          <i class="bi bi-eye me-1"></i>詳細を見る
+                        <% end %>
+                        <% if product.in_stock? %>
+                          <%= form_with url: cart_add_item_path, method: :post, local: true, class: "d-inline" do |f| %>
+                            <%= f.hidden_field :product_id, value: product.id %>
+                            <%= f.hidden_field :quantity, value: 1 %>
+                            <%= f.submit "カートに追加", class: "btn btn-primary btn-sm" do %>
+                              <i class="bi bi-cart-plus me-1"></i>カートに追加
+                            <% end %>
+                          <% end %>
+                        <% else %>
+                          <button class="btn btn-secondary btn-sm" disabled>
+                            <i class="bi bi-x-circle me-1"></i>在庫切れ
+                          </button>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      
+      <hr class="my-5">
+      <h2 class="mb-4">
+        <i class="bi bi-grid-3x3-gap me-2"></i>すべての商品
+      </h2>
+    <% else %>
+      <h1 class="mb-4">商品一覧</h1>
+    <% end %>
+    
+    <!-- Search and Filter -->
+    <div class="row mb-4">
+      <div class="col-md-8">
+        <%= form_with url: products_path, method: :get, local: true, class: "d-flex" do |f| %>
+          <%= f.text_field :search, placeholder: "商品名で検索...", value: params[:search], class: "form-control me-2" %>
+          <%= f.submit "検索", class: "btn btn-outline-primary" %>
+        <% end %>
+      </div>
+      <div class="col-md-4">
+        <%= form_with url: products_path, method: :get, local: true, class: "d-flex" do |f| %>
+          <%= f.select :category_id, options_from_collection_for_select(@categories, :id, :name, params[:category_id]), 
+                       { prompt: "カテゴリで絞り込み" }, { class: "form-select me-2" } %>
+          <%= f.submit "絞り込み", class: "btn btn-outline-secondary" %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="row">
+      <% @products.each do |product| %>
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+          <div class="card h-100">
+            <% if product.primary_image %>
+              <%= image_tag product.primary_image.image, class: "card-img-top", style: "height: 200px; object-fit: cover;" %>
+            <% else %>
+              <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                <span class="text-muted">画像なし</span>
+              </div>
+            <% end %>
+            
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title"><%= product.name %></h5>
+              <p class="card-text text-muted small"><%= product.short_description&.truncate(100) %></p>
+              
+              <div class="mt-auto">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <div>
+                    <% if product.on_sale? %>
+                      <span class="text-decoration-line-through text-muted">¥<%= number_with_delimiter(product.price) %></span>
+                      <span class="text-danger fw-bold">¥<%= number_with_delimiter(product.sale_price) %></span>
+                    <% else %>
+                      <span class="fw-bold">¥<%= number_with_delimiter(product.price) %></span>
+                    <% end %>
+                  </div>
+                  <small class="text-muted">在庫: <%= product.stock_quantity %></small>
+                </div>
+                
+                <div class="d-grid gap-2">
+                  <%= link_to product_path(product), class: "btn btn-outline-primary btn-sm" do %>
+                    <i class="bi bi-eye me-1"></i>詳細を見る
+                  <% end %>
+                  <% if product.in_stock? %>
+                    <%= form_with url: cart_add_item_path, method: :post, local: true, class: "d-inline" do |f| %>
+                      <%= f.hidden_field :product_id, value: product.id %>
+                      <%= f.hidden_field :quantity, value: 1 %>
+                      <%= f.submit "カートに追加", class: "btn btn-primary btn-sm" do %>
+                        <i class="bi bi-cart-plus me-1"></i>カートに追加
+                      <% end %>
+                    <% end %>
+                  <% else %>
+                    <button class="btn btn-secondary btn-sm" disabled>
+                      <i class="bi bi-x-circle me-1"></i>在庫切れ
+                    </button>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center">
+      <%= paginate @products %>
+    </div>
+  </div>
+</div>
