@@ -1,0 +1,26 @@
+<!-- Mobile User Authentication Section -->
+<% if user_signed_in? %>
+  <div class="px-3 py-2 text-base font-medium text-white">
+    <%= current_user.full_name %>
+  </div>
+  <div class="mt-3 space-y-1">
+    <%= link_to orders_path, class: local_assigns[:orders_class] || "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium flex items-center" do %>
+      <%= icon('user', size: 10, class_name: "mr-2") if local_assigns[:show_icon] %>
+      注文履歴
+    <% end %>
+    <%= link_to edit_user_registration_path, class: local_assigns[:profile_class] || "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" do %>
+      プロフィール
+    <% end %>
+    <% if current_user.admin? %>
+      <%= link_to admin_root_path, class: local_assigns[:admin_class] || "text-yellow-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" do %>
+        管理画面
+      <% end %>
+    <% end %>
+    <%= link_to destroy_user_session_path, method: :delete, class: local_assigns[:logout_class] || "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" do %>
+      ログアウト
+    <% end %>
+  </div>
+<% else %>
+  <%= link_to "ログイン", new_user_session_path, class: local_assigns[:login_class] || "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" %>
+  <%= link_to "新規登録", new_user_registration_path, class: local_assigns[:register_class] || "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" %>
+<% end %>

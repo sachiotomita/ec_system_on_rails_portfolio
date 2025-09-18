@@ -359,9 +359,114 @@ products.each do |product_data|
   end
 end
 
+# サンプルレビューの作成
+puts "サンプルレビューを作成中..."
+
+# 一般ユーザーがレビューを投稿できるように、注文データを作成
+if user.orders.empty?
+  order = user.orders.create!(
+    subtotal: 134800,
+    tax_amount: 13480,
+    shipping_amount: 0,
+    shipping_address: user.address,
+    billing_address: user.address,
+    payment_method: 'credit_card',
+    status: 'delivered'
+  )
+  
+  # iPhone 15 Proを注文に追加
+  iphone = Product.find_by(name: 'iPhone 15 Pro')
+  order.order_items.create!(
+    product: iphone,
+    quantity: 1,
+    price: iphone.current_price
+  )
+end
+
+# サンプルレビューデータ
+sample_reviews = [
+  {
+    product_name: 'iPhone 15 Pro',
+    rating: 5,
+    title: '最高のスマートフォンです！',
+    content: 'カメラの性能が素晴らしく、夜間撮影でも鮮明な写真が撮れます。バッテリーの持ちも良く、1日使っても余裕があります。デザインも美しく、手に持った感じも最高です。'
+  },
+  {
+    product_name: 'iPhone 15 Pro',
+    rating: 4,
+    title: '期待以上の性能',
+    content: 'A17 Proチップの性能が素晴らしく、アプリの起動も快適です。カメラのポートレートモードも自然で、SNSに投稿する写真のクオリティが格段に上がりました。'
+  },
+  {
+    product_name: 'MacBook Air M2',
+    rating: 5,
+    title: '軽量で高性能',
+    content: 'M2チップの性能に驚きました。重い作業でもサクサク動きます。バッテリーの持ちも良く、外出先でも安心して使えます。デザインもシンプルで美しいです。'
+  },
+  {
+    product_name: 'MacBook Air M2',
+    rating: 4,
+    title: 'コスパ最高',
+    content: 'この価格でこの性能は素晴らしいです。プログラミングやデザイン作業も快適にできます。キーボードの打ち心地も良く、長時間の作業でも疲れません。'
+  },
+  {
+    product_name: 'Nike Air Max 270',
+    rating: 5,
+    title: '履き心地抜群',
+    content: 'クッション性が素晴らしく、長時間歩いても疲れません。デザインもおしゃれで、カジュアルな服装に合わせやすいです。サイズもぴったりでした。'
+  },
+  {
+    product_name: '無印良品 ソファ',
+    rating: 4,
+    title: 'シンプルで使いやすい',
+    content: '無印らしいシンプルなデザインが気に入っています。座り心地も良く、リビングの雰囲気にぴったりです。組み立ても簡単でした。'
+  },
+  {
+    product_name: 'Dyson V15 Detect',
+    rating: 5,
+    title: '掃除機の概念が変わりました',
+    content: 'レーザー機能で見えないホコリまで見つけられて驚きました。吸引力も強力で、一度で綺麗になります。コードレスなのにパワーが落ちないのが素晴らしいです。'
+  },
+  {
+    product_name: 'ヨガマット プロ',
+    rating: 4,
+    title: '滑りにくくて快適',
+    content: '厚さ6mmで膝への負担が少なく、長時間のヨガでも快適です。滑りにくい素材で、ポーズを取る際も安心して集中できます。'
+  },
+  {
+    product_name: 'プログラミング入門書',
+    rating: 5,
+    title: '初心者に最適',
+    content: 'プログラミングが全くの初心者でしたが、この本のおかげで基礎を理解できました。例題も豊富で、実際に手を動かしながら学習できます。'
+  },
+  {
+    product_name: 'Bluetooth ワイヤレスイヤホン',
+    rating: 4,
+    title: '音質とノイズキャンセリングが優秀',
+    content: 'ノイズキャンセリング機能が素晴らしく、電車の中でも音楽に集中できます。音質もクリアで、長時間の使用でも耳が疲れません。'
+  }
+]
+
+# レビューを作成
+sample_reviews.each do |review_data|
+  product = Product.find_by(name: review_data[:product_name])
+  next unless product
+  
+  # 既存のレビューがない場合のみ作成
+  unless product.reviews.exists?(user: user)
+    product.reviews.create!(
+      user: user,
+      rating: review_data[:rating],
+      title: review_data[:title],
+      content: review_data[:content]
+    )
+  end
+end
+
 puts "シードデータの作成が完了しました！"
 puts "- 管理者ユーザー: admin@example.com / password123"
 puts "- 一般ユーザー: user@example.com / password123"
 puts "- カテゴリ: #{Category.count}件"
 puts "- 商品: #{Product.count}件"
 puts "- 商品画像: #{ProductImage.count}件"
+puts "- レビュー: #{Review.count}件"

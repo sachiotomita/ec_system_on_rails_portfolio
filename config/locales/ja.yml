@@ -283,3 +283,15 @@ ja:
       long: "%Y年%m月%d日(%a) %H時%M分%S秒 %z"
       short: "%y年%m月%d日 %H時%M分"
     pm: 午後
+
+  # フラッシュメッセージ
+  flash:
+    actions:
+      create:
+        notice: "%{resource_name}が正常に作成されました。"
+      update:
+        notice: "%{resource_name}が正常に更新されました。"
+      destroy:
+        notice: "%{resource_name}が正常に削除されました。"
+      alert: "エラーが発生しました。"
+      notice: "操作が完了しました。"

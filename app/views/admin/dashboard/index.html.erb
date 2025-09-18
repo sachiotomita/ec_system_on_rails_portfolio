@@ -11,7 +11,7 @@
         </div>
         <div class="flex-shrink-0">
           <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
-            <%= icon('home', size: 24, class_name: "text-primary-600") %>
+            <%= icon('home', size: 12, class_name: "text-primary-600") %>
           </div>
         </div>
       </div>
@@ -27,7 +27,7 @@
         </div>
         <div class="flex-shrink-0">
           <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-            <%= icon('user', size: 24, class_name: "text-green-600") %>
+            <%= icon('user', size: 12, class_name: "text-green-600") %>
           </div>
         </div>
       </div>
@@ -43,7 +43,7 @@
         </div>
         <div class="flex-shrink-0">
           <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-            <%= icon('user', size: 24, class_name: "text-blue-600") %>
+            <%= icon('user', size: 12, class_name: "text-blue-600") %>
           </div>
         </div>
       </div>
@@ -59,7 +59,7 @@
         </div>
         <div class="flex-shrink-0">
           <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-            <%= icon('star', size: 24, class_name: "text-yellow-600") %>
+            <%= icon('star', size: 12, class_name: "text-yellow-600") %>
           </div>
         </div>
       </div>
@@ -165,7 +165,7 @@
         <% else %>
           <div class="text-center py-8">
             <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <%= icon('check', size: 24, class_name: "text-gray-400") %>
+              <%= icon('check', size: 12, class_name: "text-gray-400") %>
             </div>
             <p class="text-gray-500 text-sm">在庫不足の商品はありません</p>
           </div>
@@ -183,22 +183,22 @@
   <div class="card-body">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <%= link_to new_admin_product_path, class: "btn-primary flex items-center justify-center p-4 hover:shadow-lg transition-shadow" do %>
-        <%= icon('home', size: 24, class_name: "mr-3") %>
+        <%= icon('home', size: 12, class_name: "mr-3") %>
         商品を追加
       <% end %>
       
       <%= link_to new_admin_category_path, class: "btn-success flex items-center justify-center p-4 hover:shadow-lg transition-shadow" do %>
-        <%= icon('tag', size: 24, class_name: "mr-3") %>
+        <%= icon('tag', size: 12, class_name: "mr-3") %>
         カテゴリを追加
       <% end %>
       
       <%= link_to admin_orders_path, class: "btn-info flex items-center justify-center p-4 hover:shadow-lg transition-shadow" do %>
-        <%= icon('user', size: 24, class_name: "mr-3") %>
+        <%= icon('user', size: 12, class_name: "mr-3") %>
         注文を確認
       <% end %>
       
       <%= link_to root_path, class: "btn-secondary flex items-center justify-center p-4 hover:shadow-lg transition-shadow" do %>
-        <%= icon('shopping-cart', size: 24, class_name: "mr-3") %>
+        <%= icon('shopping-cart', size: 12, class_name: "mr-3") %>
         ストアフロント
       <% end %>
     </div>

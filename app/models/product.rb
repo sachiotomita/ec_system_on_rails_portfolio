@@ -3,6 +3,7 @@ class Product < ApplicationRecord
   has_many :product_images, dependent: :destroy
   has_many :cart_items, dependent: :destroy
   has_many :order_items, dependent: :destroy
+  has_many :reviews, dependent: :destroy
 
   validates :name, presence: true
   validates :price, presence: true, numericality: { greater_than: 0 }
@@ -30,6 +31,22 @@ class Product < ApplicationRecord
 
   def in_stock?
     stock_quantity > 0
+  end
+
+  def average_rating
+    reviews.average(:rating)&.round(1) || 0
+  end
+
+  def review_count
+    reviews.count
+  end
+
+  def has_review_from?(user)
+    user.present? && reviews.exists?(user: user)
+  end
+
+  def can_be_reviewed_by?(user)
+    user.present? && !has_review_from?(user) && user.orders.joins(:order_items).where(order_items: { product: self }).exists?
   end
 
   private

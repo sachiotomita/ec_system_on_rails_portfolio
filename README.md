@@ -1,4 +1,4 @@
-# EC Portfolio Store
+# EC Tomita Portfolio Store
 
 Rails 8で構築されたポートフォリオ用ECシステムです。
 
@@ -156,7 +156,7 @@ DB_PASSWORD=your_password
 | `DB_USERNAME` | データベースユーザー名 | `postgres` |
 | `DB_PASSWORD` | データベースパスワード | `password` |
 | `REDIS_URL` | Redis URL | `redis://redis:6379/0` |
-| `APP_NAME` | アプリケーション名 | `EC Portfolio Store` |
+| `APP_NAME` | アプリケーション名 | `EC Tomita Portfolio Store` |
 | `APP_URL` | アプリケーションURL | `http://localhost:3000` |
 
 ## テスト用アカウント

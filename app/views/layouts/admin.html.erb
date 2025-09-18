@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "管理画面 - EC Portfolio Store" %></title>
+    <title><%= content_for(:title) || "管理画面 - EC Tomita Portfolio Store" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -32,12 +32,12 @@
             </div>
             <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
               <%= link_to admin_root_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center transition-colors" do %>
-                <%= icon('cog-6-tooth', size: 12, class_name: "mr-2") %>
+                <%= icon('cog-6-tooth', size: 10, class_name: "mr-2") %>
                 ダッシュボード
               <% end %>
               <div class="relative">
                 <button class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center" onclick="toggleDropdown('productsDropdown')">
-                  <%= icon('home', size: 12, class_name: "mr-2") %>
+                  <%= icon('home', size: 10, class_name: "mr-2") %>
                   商品管理
                   <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -60,7 +60,7 @@
                 </div>
               </div>
               <%= link_to admin_orders_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center transition-colors" do %>
-                <%= icon('user', size: 12, class_name: "mr-2") %>
+                <%= icon('user', size: 10, class_name: "mr-2") %>
                 注文管理
               <% end %>
             </div>
@@ -68,12 +68,12 @@
           
           <div class="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
             <%= link_to root_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center transition-colors" do %>
-              <%= icon('shopping-cart', size: 12, class_name: "mr-2") %>
+              <%= icon('shopping-cart', size: 10, class_name: "mr-2") %>
               ストアフロント
             <% end %>
             <div class="relative">
               <button class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center" onclick="toggleDropdown('userDropdown')">
-                <%= icon('user', size: 12, class_name: "mr-2") %>
+                <%= icon('user', size: 10, class_name: "mr-2") %>
                 <%= current_user.full_name %>
                 <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -94,7 +94,7 @@
           <!-- Mobile menu button -->
           <div class="sm:hidden flex items-center">
             <button class="text-gray-300 hover:text-white p-2" onclick="toggleMobileMenu()">
-              <%= icon('bars-3', size: 24) %>
+              <%= icon('bars-3', size: 10) %>
             </button>
           </div>
         </div>
@@ -103,21 +103,21 @@
         <div id="mobileMenu" class="hidden sm:hidden">
           <div class="pt-2 pb-3 space-y-1">
             <%= link_to admin_root_path, class: "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium flex items-center" do %>
-              <%= icon('cog-6-tooth', size: 12, class_name: "mr-2") %>
+              <%= icon('cog-6-tooth', size: 10, class_name: "mr-2") %>
               ダッシュボード
             <% end %>
             <%= link_to admin_products_path, class: "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium flex items-center" do %>
-              <%= icon('home', size: 12, class_name: "mr-2") %>
+              <%= icon('home', size: 10, class_name: "mr-2") %>
               商品管理
             <% end %>
             <%= link_to admin_orders_path, class: "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium flex items-center" do %>
-              <%= icon('user', size: 12, class_name: "mr-2") %>
+              <%= icon('user', size: 10, class_name: "mr-2") %>
               注文管理
             <% end %>
           </div>
           <div class="pt-4 pb-3 border-t border-gray-700">
             <%= link_to root_path, class: "text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium flex items-center" do %>
-              <%= icon('shopping-cart', size: 12, class_name: "mr-2") %>
+              <%= icon('shopping-cart', size: 10, class_name: "mr-2") %>
               ストアフロント
             <% end %>
             <div class="px-3 py-2 text-base font-medium text-white">
@@ -140,11 +140,11 @@
     <% if notice %>
       <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 flex items-center justify-between" role="alert">
         <div class="flex items-center">
-          <%= icon('check', size: 12, class_name: "mr-2") %>
+          <%= icon('check', size: 10, class_name: "mr-2") %>
           <%= notice %>
         </div>
         <button type="button" class="text-green-400 hover:text-green-600" onclick="this.parentElement.style.display='none'">
-          <%= icon('x-mark', size: 12) %>
+          <%= icon('x-mark', size: 10) %>
         </button>
       </div>
     <% end %>
@@ -152,11 +152,11 @@
     <% if alert %>
       <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 flex items-center justify-between" role="alert">
         <div class="flex items-center">
-          <%= icon('exclamation-triangle', size: 12, class_name: "mr-2") %>
+          <%= icon('exclamation-triangle', size: 10, class_name: "mr-2") %>
           <%= alert %>
         </div>
         <button type="button" class="text-red-400 hover:text-red-600" onclick="this.parentElement.style.display='none'">
-          <%= icon('x-mark', size: 12) %>
+          <%= icon('x-mark', size: 10) %>
         </button>
       </div>
     <% end %>
@@ -169,25 +169,25 @@
           <ul class="space-y-2">
             <li>
               <%= link_to admin_root_path, class: "flex items-center px-4 py-2 text-sm font-medium rounded-md #{'bg-primary-100 text-primary-700' if current_page?(admin_root_path)} #{'text-gray-700 hover:bg-gray-100' unless current_page?(admin_root_path)}" do %>
-                <%= icon('cog-6-tooth', size: 12, class_name: "mr-3") %>
+                <%= icon('cog-6-tooth', size: 10, class_name: "mr-3") %>
                 ダッシュボード
               <% end %>
             </li>
             <li>
               <%= link_to admin_products_path, class: "flex items-center px-4 py-2 text-sm font-medium rounded-md #{'bg-primary-100 text-primary-700' if controller_name == 'products'}" do %>
-                <%= icon('home', size: 12, class_name: "mr-3") %>
+                <%= icon('home', size: 10, class_name: "mr-3") %>
                 商品管理
               <% end %>
             </li>
             <li>
               <%= link_to admin_categories_path, class: "flex items-center px-4 py-2 text-sm font-medium rounded-md #{'bg-primary-100 text-primary-700' if controller_name == 'categories'}" do %>
-                <%= icon('tag', size: 12, class_name: "mr-3") %>
+                <%= icon('tag', size: 10, class_name: "mr-3") %>
                 カテゴリ管理
               <% end %>
             </li>
             <li>
               <%= link_to admin_orders_path, class: "flex items-center px-4 py-2 text-sm font-medium rounded-md #{'bg-primary-100 text-primary-700' if controller_name == 'orders'}" do %>
-                <%= icon('user', size: 12, class_name: "mr-3") %>
+                <%= icon('user', size: 10, class_name: "mr-3") %>
                 注文管理
               <% end %>
             </li>

@@ -76,9 +76,9 @@
                   <% @order_items.each do |item| %>
                     <tr>
                       <td><%= item.product_name %></td>
-                      <td>¥<%= number_with_delimiter(item.unit_price) %></td>
+                      <td>¥<%= number_with_delimiter(item.unit_price, precision: 0) %></td>
                       <td><%= item.quantity %></td>
-                      <td>¥<%= number_with_delimiter(item.total_price) %></td>
+                      <td>¥<%= number_with_delimiter(item.total_price, precision: 0) %></td>
                     </tr>
                   <% end %>
                 </tbody>
@@ -96,20 +96,20 @@
           <div class="card-body">
             <div class="d-flex justify-content-between mb-2">
               <span>小計:</span>
-              <span>¥<%= number_with_delimiter(@order.subtotal) %></span>
+              <span>¥<%= number_with_delimiter(@order.subtotal, precision: 0) %></span>
             </div>
             <div class="d-flex justify-content-between mb-2">
               <span>送料:</span>
-              <span>¥<%= number_with_delimiter(@order.shipping_amount) %></span>
+              <span>¥<%= number_with_delimiter(@order.shipping_amount, precision: 0) %></span>
             </div>
             <div class="d-flex justify-content-between mb-2">
               <span>消費税:</span>
-              <span>¥<%= number_with_delimiter(@order.tax_amount) %></span>
+              <span>¥<%= number_with_delimiter(@order.tax_amount, precision: 0) %></span>
             </div>
             <hr>
             <div class="d-flex justify-content-between mb-3">
               <span class="fw-bold">合計:</span>
-              <span class="fw-bold">¥<%= number_with_delimiter(@order.total_amount) %></span>
+              <span class="fw-bold">¥<%= number_with_delimiter(@order.total_amount, precision: 0) %></span>
             </div>
             
             <% if @order.can_cancel? %>

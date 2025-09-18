@@ -118,6 +118,19 @@ end
 add_index :order_items, :order_id
 add_index :order_items, :product_id
 
+create_table :reviews, force: :cascade do |t|
+  t.references :user, null: false, foreign_key: true
+  t.references :product, null: false, foreign_key: true
+  t.integer :rating, null: false
+  t.string :title, null: false, limit: 100
+  t.text :content, null: false, limit: 1000
+  t.timestamps null: false
+end
+
+add_index :reviews, [:user_id, :product_id], unique: true
+add_index :reviews, :rating
+add_index :reviews, :created_at
+
 # 外部キー制約
 add_foreign_key :products, :categories
 add_foreign_key :product_images, :products

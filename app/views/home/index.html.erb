@@ -3,17 +3,17 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
       <div>
-        <h1 class="text-4xl md:text-6xl font-bold mb-6 text-shadow-lg">EC Portfolio Store</h1>
+        <h1 class="text-4xl md:text-6xl font-bold mb-6 text-shadow-lg">EC Tomita Portfolio Store</h1>
         <p class="text-xl md:text-2xl mb-4 text-primary-100">Rails 8で構築されたポートフォリオ用ECサイトへようこそ！</p>
         <p class="text-lg mb-8 text-primary-200">最新の技術スタックで作られた、モダンなECシステムをお試しください。</p>
-        <%= link_to products_path, class: "btn-primary btn-lg inline-flex items-center" do %>
-          <%= icon('shopping-cart', size: 24, class_name: "mr-2") %>
-          商品を見る
-        <% end %>
+        <%#= link_to products_path, class: "btn-primary btn-lg inline-flex items-center" do %>
+          <%#= icon('shopping-cart', size: 12, class_name: "mr-2") %>
+<!--          商品を見る-->
+        <%# end %>
       </div>
       <div class="text-center lg:text-right">
         <div class="inline-flex items-center justify-center w-32 h-32 bg-white bg-opacity-20 rounded-full">
-          <%= icon('shopping-cart', size: 64, class_name: "text-white") %>
+          <%#= icon('shopping-cart', size: 64, class_name: "text-white") %>
         </div>
       </div>
     </div>
@@ -55,10 +55,10 @@
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center space-x-2">
                   <% if product.on_sale? %>
-                    <span class="text-sm text-gray-500 line-through">¥<%= number_with_delimiter(product.price) %></span>
-                    <span class="text-lg font-bold text-red-600">¥<%= number_with_delimiter(product.sale_price) %></span>
+                    <span class="text-sm text-gray-500 line-through">¥<%= number_with_delimiter(product.price, precision: 0) %></span>
+                    <span class="text-lg font-bold text-red-600">¥<%= number_with_delimiter(product.sale_price, precision: 0) %></span>
                   <% else %>
-                    <span class="text-lg font-bold text-gray-900">¥<%= number_with_delimiter(product.price) %></span>
+                    <span class="text-lg font-bold text-gray-900">¥<%= number_with_delimiter(product.price, precision: 0) %></span>
                   <% end %>
                 </div>
               </div>
@@ -150,7 +150,7 @@
             <div class="card-body p-4">
               <h3 class="text-sm font-semibold text-gray-900 mb-2 line-clamp-2"><%= product.name.truncate(30) %></h3>
               <div class="flex items-center justify-between mb-3">
-                <span class="text-sm font-bold text-gray-900">¥<%= number_with_delimiter(product.current_price) %></span>
+                <span class="text-sm font-bold text-gray-900">¥<%= number_with_delimiter(product.current_price, precision: 0) %></span>
                 <span class="text-xs text-gray-500"><%= product.category.name %></span>
               </div>
               <%= link_to product_path(product), class: "btn-outline btn-sm w-full flex items-center justify-center" do %>
@@ -163,4 +163,46 @@
       </div>
     </div>
   <% end %>
+
+  <!-- Newsletter Subscription Section -->
+  <div class="bg-gradient-to-r from-primary-600 to-primary-800 rounded-2xl p-8 md:p-12 text-white">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-white bg-opacity-20 rounded-full mb-6">
+          <%= icon('envelope', size: 12, class_name: "text-white") %>
+        </div>
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">最新情報をお届け</h2>
+        <p class="text-lg md:text-xl text-primary-100 mb-2">新商品の情報やお得なキャンペーンをいち早くお知らせします</p>
+        <p class="text-primary-200">メルマガ登録で、初回購入時に使える10%オフクーポンをプレゼント！</p>
+      </div>
+      
+      <div class="max-w-md mx-auto">
+        <%= form_with url: "#", method: :post, local: true, class: "flex flex-col sm:flex-row gap-4" do |f| %>
+          <%= f.email_field :email, placeholder: "メールアドレスを入力", 
+                class: "flex-1 px-4 py-3 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50" %>
+          <%= f.submit "登録する", 
+                class: "bg-white text-primary-600 hover:bg-primary-50 px-8 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center" %>
+        <% end %>
+        
+        <p class="text-sm text-primary-200 mt-4">
+          登録は無料です。いつでも配信停止できます。
+        </p>
+      </div>
+      
+      <div class="mt-8 flex flex-wrap justify-center gap-6 text-sm text-primary-200">
+        <div class="flex items-center">
+          <%= icon('check', size: 6, class_name: "mr-2") %>
+          新商品情報
+        </div>
+        <div class="flex items-center">
+          <%= icon('check', size: 6, class_name: "mr-2") %>
+          特別キャンペーン
+        </div>
+        <div class="flex items-center">
+          <%= icon('check', size: 6, class_name: "mr-2") %>
+          お得なクーポン
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

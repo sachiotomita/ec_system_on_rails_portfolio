@@ -50,10 +50,19 @@ ja:
       signed_in: "ログインしました。"
       signed_out: "ログアウトしました。"
       already_signed_out: "ログアウトしました。"
+      successfully: "ログインしました。"
     unlocks:
       send_instructions: "アカウントのロック解除方法について、数分以内にメールをお送りします。"
       send_paranoid_instructions: "アカウントが存在する場合、アカウントのロック解除方法について、数分以内にメールをお送りします。"
       unlocked: "アカウントのロックが正常に解除されました。続行するにはログインしてください。"
+  # 一般的な成功メッセージ
+  success:
+    signed_in: "ログインしました。"
+    signed_out: "ログアウトしました。"
+    signed_up: "新規登録が完了しました。"
+    updated: "アカウントが更新されました。"
+    password_updated: "パスワードが更新されました。"
+  
   errors:
     messages:
       already_confirmed: "は既に確認済みです。ログインをお試しください"

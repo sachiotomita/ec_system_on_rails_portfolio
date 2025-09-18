@@ -41,10 +41,10 @@
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center space-x-2">
                     <% if product.on_sale? %>
-                  <span class="text-sm text-gray-500 line-through">¥<%= number_with_delimiter(product.price) %></span>
-                  <span class="text-lg font-bold text-red-600">¥<%= number_with_delimiter(product.sale_price) %></span>
+                  <span class="text-sm text-gray-500 line-through">¥<%= number_with_delimiter(product.price, precision: 0) %></span>
+                  <span class="text-lg font-bold text-red-600">¥<%= number_with_delimiter(product.sale_price, precision: 0) %></span>
                     <% else %>
-                  <span class="text-lg font-bold text-gray-900">¥<%= number_with_delimiter(product.price) %></span>
+                  <span class="text-lg font-bold text-gray-900">¥<%= number_with_delimiter(product.price, precision: 0) %></span>
                     <% end %>
                   </div>
               <span class="text-xs text-gray-500">在庫: <%= product.stock_quantity %></span>

@@ -39,7 +39,7 @@ services:
       - DB_NAME=ec_fullscratch_on_rails_portfolio_development
       - DB_USERNAME=postgres
       - DB_PASSWORD=password
-      - APP_NAME=EC Portfolio Store
+      - APP_NAME=EC Tomita Portfolio Store
       - APP_URL=http://localhost:3000
       - DEBUG=true
       - CACHE_ENABLED=false
