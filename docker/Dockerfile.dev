@@ -1,0 +1,50 @@
+# 開発環境用Dockerfile
+FROM ruby:3.2.2-slim
+
+# 作業ディレクトリを設定
+WORKDIR /app
+
+# 必要なパッケージをインストール
+RUN apt-get update -qq && \
+    apt-get install -y \
+    build-essential \
+    libpq-dev \
+    postgresql-client \
+    git \
+    curl \
+    nodejs \
+    npm \
+    yarn \
+    libvips \
+    && rm -rf /var/lib/apt/lists/*
+
+# Node.jsのバージョンを更新
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
+
+# Yarnのインストール
+RUN npm install -g yarn
+
+# 環境変数を設定
+ENV RAILS_ENV=development
+ENV BUNDLE_PATH=/usr/local/bundle
+ENV BUNDLE_WITHOUT=""
+
+# Gemfileとpackage.jsonをコピーして依存関係をインストール
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+COPY package.json yarn.lock ./
+RUN yarn install
+
+# アプリケーションコードをコピー
+COPY . .
+
+# アセットをプリコンパイル
+RUN bundle exec rails assets:precompile
+
+# ポート3000を公開
+EXPOSE 3000
+
+# デフォルトコマンド
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]

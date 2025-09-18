@@ -1,0 +1,60 @@
+# 開発環境用のDocker Compose設定
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: ec_portfolio_db
+    environment:
+      POSTGRES_DB: ec_fullscratch_on_rails_portfolio_development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - ec_network
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    container_name: ec_portfolio_app
+    command: bundle exec rails server -b 0.0.0.0
+    volumes:
+      - ..:/app
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgres://postgres:password@db:5432/ec_fullscratch_on_rails_portfolio_development
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+    networks:
+      - ec_network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: ec_portfolio_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - ec_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  bundle_cache:
+  node_modules:
+
+networks:
+  ec_network:
+    driver: bridge

@@ -1,0 +1,30 @@
+# メインのDocker Compose設定
+# 開発環境用の設定は docker/docker-compose.yml を参照
+
+version: '3.8'
+
+# 開発環境用の設定を読み込み
+services:
+  db:
+    extends:
+      file: docker/docker-compose.yml
+      service: db
+
+  app:
+    extends:
+      file: docker/docker-compose.yml
+      service: app
+
+  redis:
+    extends:
+      file: docker/docker-compose.yml
+      service: redis
+
+volumes:
+  postgres_data:
+  bundle_cache:
+  node_modules:
+
+networks:
+  ec_network:
+    driver: bridge

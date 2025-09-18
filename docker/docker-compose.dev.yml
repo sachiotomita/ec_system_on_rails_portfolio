@@ -1,0 +1,15 @@
+# 開発環境用の追加設定
+version: '3.8'
+
+services:
+  app:
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgres://postgres:password@db:5432/ec_fullscratch_on_rails_portfolio_development
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/app/node_modules
+    stdin_open: true
+    tty: true

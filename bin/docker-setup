@@ -1,0 +1,41 @@
+#!/bin/bash
+# Docker Compose用のセットアップスクリプト
+
+set -e
+
+echo "🐳 Docker Compose環境をセットアップします..."
+
+# 既存のコンテナを停止・削除
+echo "📦 既存のコンテナを停止・削除します..."
+docker-compose -f docker/docker-compose.yml down -v
+
+# イメージをビルド
+echo "🔨 Dockerイメージをビルドします..."
+docker-compose -f docker/docker-compose.yml build
+
+# データベースを起動
+echo "🗄️ データベースを起動します..."
+docker-compose -f docker/docker-compose.yml up -d db redis
+
+# データベースの準備ができるまで待機
+echo "⏳ データベースの準備を待機します..."
+sleep 10
+
+# データベースのマイグレーションとシード
+echo "🌱 データベースをセットアップします..."
+docker-compose -f docker/docker-compose.yml run --rm app bundle exec ridgepole -c config/database.yml -E development --apply -f db/Schemafile.rb
+docker-compose -f docker/docker-compose.yml run --rm app bundle exec rails db:seed
+
+# アプリケーションを起動
+echo "🚀 アプリケーションを起動します..."
+docker-compose -f docker/docker-compose.yml up -d app
+
+echo "✅ セットアップが完了しました！"
+echo "🌐 アプリケーション: http://localhost:3000"
+echo "🗄️ データベース: localhost:5432"
+echo "📊 Redis: localhost:6379"
+echo ""
+echo "📝 便利なコマンド:"
+echo "  make logs    # アプリケーションログを表示"
+echo "  make shell   # アプリケーションコンテナに入る"
+echo "  make down    # すべてのコンテナを停止"
