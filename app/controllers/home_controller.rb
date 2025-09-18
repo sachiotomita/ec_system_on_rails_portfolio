@@ -1,4 +1,4 @@
-class Store::HomeController < ApplicationController
+class HomeController < ApplicationController
   layout 'store'
   def index
     @featured_products = Product.includes(:category, :product_images)

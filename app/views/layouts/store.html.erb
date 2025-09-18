@@ -29,7 +29,7 @@
     <!-- Store Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
-        <%= link_to "EC Portfolio Store", store_root_path, class: "navbar-brand fw-bold" %>
+        <%= link_to "EC Portfolio Store", root_path, class: "navbar-brand fw-bold" %>
         
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span class="navbar-toggler-icon"></span>
@@ -38,17 +38,17 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <%= link_to store_root_path, class: "nav-link" do %>
+              <%= link_to root_path, class: "nav-link" do %>
                 <i class="bi bi-house me-1"></i>ホーム
               <% end %>
             </li>
             <li class="nav-item">
-              <%= link_to store_products_path, class: "nav-link" do %>
+              <%= link_to products_path, class: "nav-link" do %>
                 <i class="bi bi-grid-3x3-gap me-1"></i>商品一覧
               <% end %>
             </li>
             <li class="nav-item">
-              <%= link_to store_cart_path, class: "nav-link" do %>
+              <%= link_to cart_path, class: "nav-link" do %>
                 <i class="bi bi-cart me-1"></i>カート
                 <% if user_signed_in? && current_user.cart&.cart_items&.any? %>
                   <span class="badge bg-danger ms-1"><%= current_user.cart.cart_items.sum(:quantity) %></span>
@@ -56,7 +56,7 @@
               <% end %>
             </li>
             <li class="nav-item">
-              <%= link_to store_orders_path, class: "nav-link" do %>
+              <%= link_to orders_path, class: "nav-link" do %>
                 <i class="bi bi-receipt me-1"></i>注文履歴
               <% end %>
             </li>
@@ -131,9 +131,9 @@
           <div class="col-md-2">
             <h6 class="fw-bold">ショッピング</h6>
             <ul class="list-unstyled">
-              <li><%= link_to "商品一覧", store_products_path, class: "text-muted text-decoration-none" %></li>
-              <li><%= link_to "カテゴリ", store_products_path, class: "text-muted text-decoration-none" %></li>
-              <li><%= link_to "おすすめ商品", store_root_path, class: "text-muted text-decoration-none" %></li>
+              <li><%= link_to "商品一覧", products_path, class: "text-muted text-decoration-none" %></li>
+              <li><%= link_to "カテゴリ", products_path, class: "text-muted text-decoration-none" %></li>
+              <li><%= link_to "おすすめ商品", root_path, class: "text-muted text-decoration-none" %></li>
             </ul>
           </div>
           <div class="col-md-2">

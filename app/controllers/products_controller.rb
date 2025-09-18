@@ -1,4 +1,6 @@
-class Store::ProductsController < Store::BaseController
+class ProductsController < ApplicationController
+  before_action :authenticate_user!
+  layout 'store'
   before_action :set_product, only: [:show]
   before_action :set_categories
 
@@ -18,7 +20,7 @@ class Store::ProductsController < Store::BaseController
     end
 
     # ホームページ用のフィーチャー商品
-    if request.path == store_root_path
+    if request.path == root_path
       @featured_products = Product.includes(:category, :product_images)
                                  .active
                                  .featured

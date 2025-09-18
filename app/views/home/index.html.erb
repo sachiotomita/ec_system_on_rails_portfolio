@@ -6,7 +6,7 @@
         <h1 class="display-4 fw-bold">EC Portfolio Store</h1>
         <p class="lead">Rails 8で構築されたポートフォリオ用ECサイトへようこそ！</p>
         <p>最新の技術スタックで作られた、モダンなECシステムをお試しください。</p>
-        <%= link_to "商品を見る", store_products_path, class: "btn btn-light btn-lg" %>
+        <%= link_to "商品を見る", products_path, class: "btn btn-light btn-lg" %>
       </div>
       <div class="col-lg-6 text-center">
         <i class="bi bi-shop display-1 opacity-50"></i>
@@ -53,11 +53,11 @@
                     </div>
                     
                     <div class="d-grid gap-2">
-                      <%= link_to store_product_path(product), class: "btn btn-outline-primary btn-sm" do %>
+                      <%= link_to product_path(product), class: "btn btn-outline-primary btn-sm" do %>
                         <i class="bi bi-eye me-1"></i>詳細を見る
                       <% end %>
                       <% if product.in_stock? %>
-                        <%= form_with url: store_cart_add_item_path, method: :post, local: true, class: "d-inline" do |f| %>
+                        <%= form_with url: cart_add_item_path, method: :post, local: true, class: "d-inline" do |f| %>
                           <%= f.hidden_field :product_id, value: product.id %>
                           <%= f.hidden_field :quantity, value: 1 %>
                           <%= f.submit "カートに追加", class: "btn btn-primary btn-sm" do %>
@@ -77,7 +77,7 @@
           <% end %>
         </div>
         <div class="text-center">
-          <%= link_to "すべての商品を見る", store_products_path, class: "btn btn-outline-primary" %>
+          <%= link_to "すべての商品を見る", products_path, class: "btn btn-outline-primary" %>
         </div>
       </div>
     </div>
@@ -93,7 +93,7 @@
         <div class="row">
           <% @categories.each do |category| %>
             <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
-              <%= link_to store_products_path(category_id: category.id), class: "text-decoration-none" do %>
+              <%= link_to products_path(category_id: category.id), class: "text-decoration-none" do %>
                 <div class="card h-100 text-center border-0 shadow-sm hover-shadow">
                   <div class="card-body">
                     <i class="bi bi-tag display-4 text-primary mb-2"></i>
@@ -134,7 +134,7 @@
                       <span class="fw-bold small">¥<%= number_with_delimiter(product.current_price) %></span>
                       <small class="text-muted"><%= product.category.name %></small>
                     </div>
-                    <%= link_to store_product_path(product), class: "btn btn-outline-primary btn-sm w-100 mt-2" do %>
+                    <%= link_to product_path(product), class: "btn btn-outline-primary btn-sm w-100 mt-2" do %>
                       <i class="bi bi-eye me-1"></i>詳細
                     <% end %>
                   </div>
