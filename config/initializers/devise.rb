@@ -29,6 +29,10 @@ Devise.setup do |config|
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
 
+  # ==> Internationalization
+  # Configure the default locale for Devise
+  config.i18n.default_locale = :ja
+
   # Configure the parent class responsible to send e-mails.
   # config.parent_mailer = 'ActionMailer::Base'
 
