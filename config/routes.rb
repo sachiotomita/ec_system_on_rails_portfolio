@@ -5,13 +5,20 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
+  # Letter opener web for email preview in development
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
+
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+  
+  # Service worker route
+  get "serviceworker.js" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Devise routes
   devise_for :users, controllers: {
-    registrations: 'users/registrations'
+    registrations: 'users/registrations',
+    sessions: 'users/sessions'
   }
 
   # Store routes (ストアフロント) - トップレベル
@@ -24,6 +31,7 @@ Rails.application.routes.draw do
   end
 
   get 'cart', to: 'cart#show'
+  get 'cart/count', to: 'cart#count'
   post 'cart/add_item', to: 'cart#add_item'
   patch 'cart/update_item', to: 'cart#update_item'
   delete 'cart/remove_item', to: 'cart#remove_item'

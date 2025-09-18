@@ -1,148 +1,169 @@
 <!-- Hero Section -->
-<div class="jumbotron bg-primary text-white rounded-3 p-5 mb-5">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-lg-6">
-        <h1 class="display-4 fw-bold">EC Portfolio Store</h1>
-        <p class="lead">Rails 8で構築されたポートフォリオ用ECサイトへようこそ！</p>
-        <p>最新の技術スタックで作られた、モダンなECシステムをお試しください。</p>
-        <%= link_to "商品を見る", products_path, class: "btn btn-light btn-lg" %>
+<div class="bg-gradient-to-r from-primary-600 to-primary-800 text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      <div>
+        <h1 class="text-4xl md:text-6xl font-bold mb-6 text-shadow-lg">EC Portfolio Store</h1>
+        <p class="text-xl md:text-2xl mb-4 text-primary-100">Rails 8で構築されたポートフォリオ用ECサイトへようこそ！</p>
+        <p class="text-lg mb-8 text-primary-200">最新の技術スタックで作られた、モダンなECシステムをお試しください。</p>
+        <%= link_to products_path, class: "btn-primary btn-lg inline-flex items-center" do %>
+          <%= icon('shopping-cart', size: 24, class_name: "mr-2") %>
+          商品を見る
+        <% end %>
       </div>
-      <div class="col-lg-6 text-center">
-        <i class="bi bi-shop display-1 opacity-50"></i>
+      <div class="text-center lg:text-right">
+        <div class="inline-flex items-center justify-center w-32 h-32 bg-white bg-opacity-20 rounded-full">
+          <%= icon('shopping-cart', size: 64, class_name: "text-white") %>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="container">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
   <!-- Featured Products Section -->
   <% if @featured_products.any? %>
-    <div class="row mb-5">
-      <div class="col-12">
-        <h2 class="mb-4">
-          <i class="bi bi-star-fill text-warning me-2"></i>おすすめ商品
+    <div class="mb-16">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4 flex items-center justify-center">
+          <%= icon('star', size: 12, class_name: "text-yellow-500 mr-3") %>
+          おすすめ商品
         </h2>
-        <div class="row">
-          <% @featured_products.each do |product| %>
-            <div class="col-lg-3 col-md-6 mb-4">
-              <div class="card h-100 border-0 shadow-sm">
-                <% if product.primary_image %>
-                  <%= image_tag product.primary_image.image, class: "card-img-top", style: "height: 200px; object-fit: cover;" %>
-                <% else %>
-                  <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                    <span class="text-muted">画像なし</span>
-                  </div>
-                <% end %>
-                
-                <div class="card-body d-flex flex-column">
-                  <h5 class="card-title"><%= product.name %></h5>
-                  <p class="card-text text-muted small"><%= product.short_description&.truncate(100) %></p>
-                  
-                  <div class="mt-auto">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                      <div>
-                        <% if product.on_sale? %>
-                          <span class="text-decoration-line-through text-muted">¥<%= number_with_delimiter(product.price) %></span>
-                          <span class="text-danger fw-bold">¥<%= number_with_delimiter(product.sale_price) %></span>
-                        <% else %>
-                          <span class="fw-bold">¥<%= number_with_delimiter(product.price) %></span>
-                        <% end %>
-                      </div>
-                      <span class="badge bg-warning text-dark">おすすめ</span>
-                    </div>
-                    
-                    <div class="d-grid gap-2">
-                      <%= link_to product_path(product), class: "btn btn-outline-primary btn-sm" do %>
-                        <i class="bi bi-eye me-1"></i>詳細を見る
-                      <% end %>
-                      <% if product.in_stock? %>
-                        <%= form_with url: cart_add_item_path, method: :post, local: true, class: "d-inline" do |f| %>
-                          <%= f.hidden_field :product_id, value: product.id %>
-                          <%= f.hidden_field :quantity, value: 1 %>
-                          <%= f.submit "カートに追加", class: "btn btn-primary btn-sm" do %>
-                            <i class="bi bi-cart-plus me-1"></i>カートに追加
-                          <% end %>
-                        <% end %>
-                      <% else %>
-                        <button class="btn btn-secondary btn-sm" disabled>
-                          <i class="bi bi-x-circle me-1"></i>在庫切れ
-                        </button>
-                      <% end %>
-                    </div>
-                  </div>
+        <p class="text-lg text-gray-600">厳選された人気商品をご紹介します</p>
+      </div>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <% @featured_products.each do |product| %>
+          <div class="card group hover:shadow-xl transition-shadow duration-300">
+            <div class="relative overflow-hidden rounded-t-lg">
+              <% if product.primary_image %>
+                <%= image_tag product.primary_image.image, class: "w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" %>
+              <% else %>
+                <div class="w-full h-48 bg-gray-100 flex items-center justify-center">
+                  <span class="text-gray-400">画像なし</span>
                 </div>
+              <% end %>
+              <div class="absolute top-4 right-4">
+                <span class="badge-primary">おすすめ</span>
               </div>
             </div>
-          <% end %>
-        </div>
-        <div class="text-center">
-          <%= link_to "すべての商品を見る", products_path, class: "btn btn-outline-primary" %>
-        </div>
+            
+            <div class="card-body">
+              <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2"><%= product.name %></h3>
+              <p class="text-gray-600 text-sm mb-4 line-clamp-2"><%= product.short_description&.truncate(100) %></p>
+              
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-2">
+                  <% if product.on_sale? %>
+                    <span class="text-sm text-gray-500 line-through">¥<%= number_with_delimiter(product.price) %></span>
+                    <span class="text-lg font-bold text-red-600">¥<%= number_with_delimiter(product.sale_price) %></span>
+                  <% else %>
+                    <span class="text-lg font-bold text-gray-900">¥<%= number_with_delimiter(product.price) %></span>
+                  <% end %>
+                </div>
+              </div>
+              
+              <div class="space-y-2">
+                <%= link_to product_path(product), class: "btn-outline btn-sm w-full flex items-center justify-center" do %>
+                  <%= icon('eye', size: 16, class_name: "mr-2 w-4 h-4") %>
+                  詳細を見る
+                <% end %>
+                
+                <% if product.in_stock? %>
+                  <%= form_with url: cart_add_item_path, method: :post, local: true, class: "w-full" do |f| %>
+                    <%= f.hidden_field :product_id, value: product.id %>
+                    <%= f.hidden_field :quantity, value: 1 %>
+                    <%= f.submit "カートに追加", class: "btn-primary btn-sm w-full flex items-center justify-center" do %>
+                      <%= icon('shopping-cart', size: 16, class_name: "mr-2 w-4 h-4") %>
+                      カートに追加
+                    <% end %>
+                  <% end %>
+                <% else %>
+                  <button class="btn-secondary btn-sm w-full flex items-center justify-center" disabled>
+                    <%= icon('x-mark', size: 16, class_name: "mr-2 w-4 h-4") %>
+                    在庫切れ
+                  </button>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <div class="text-center mt-12">
+        <%= link_to products_path, class: "btn-outline btn-lg" do %>
+          すべての商品を見る
+          <%= icon('arrow-right', size: 12, class_name: "ml-2") %>
+        <% end %>
       </div>
     </div>
   <% end %>
 
   <!-- Categories Section -->
   <% if @categories.any? %>
-    <div class="row mb-5">
-      <div class="col-12">
-        <h2 class="mb-4">
-          <i class="bi bi-tags me-2"></i>カテゴリ
+    <div class="mb-16">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4 flex items-center justify-center">
+          <%= icon('tag', size: 12, class_name: "text-primary-600 mr-3") %>
+          カテゴリ
         </h2>
-        <div class="row">
-          <% @categories.each do |category| %>
-            <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
-              <%= link_to products_path(category_id: category.id), class: "text-decoration-none" do %>
-                <div class="card h-100 text-center border-0 shadow-sm hover-shadow">
-                  <div class="card-body">
-                    <i class="bi bi-tag display-4 text-primary mb-2"></i>
-                    <h6 class="card-title"><%= category.name %></h6>
-                  </div>
+        <p class="text-lg text-gray-600">商品カテゴリから探す</p>
+      </div>
+      
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6">
+        <% @categories.each do |category| %>
+          <%= link_to products_path(category_id: category.id), class: "group" do %>
+            <div class="card text-center group-hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1">
+              <div class="card-body py-8">
+                <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-200 transition-colors">
+                  <%= icon('tag', size: 12, class_name: "text-primary-600") %>
                 </div>
-              <% end %>
+                <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors"><%= category.name %></h3>
+              </div>
             </div>
           <% end %>
-        </div>
+        <% end %>
       </div>
     </div>
   <% end %>
 
   <!-- Recent Products Section -->
   <% if @recent_products.any? %>
-    <div class="row mb-5">
-      <div class="col-12">
-        <h2 class="mb-4">
-          <i class="bi bi-clock me-2"></i>新着商品
+    <div class="mb-16">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4 flex items-center justify-center">
+          <%= icon('clock', size: 12, class_name: "text-green-500 mr-3") %>
+          新着商品
         </h2>
-        <div class="row">
-          <% @recent_products.each do |product| %>
-            <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
-              <div class="card h-100 border-0 shadow-sm">
-                <% if product.primary_image %>
-                  <%= image_tag product.primary_image.image, class: "card-img-top", style: "height: 150px; object-fit: cover;" %>
-                <% else %>
-                  <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
-                    <span class="text-muted small">画像なし</span>
-                  </div>
-                <% end %>
-                
-                <div class="card-body d-flex flex-column p-2">
-                  <h6 class="card-title small"><%= product.name.truncate(30) %></h6>
-                  <div class="mt-auto">
-                    <div class="d-flex justify-content-between align-items-center">
-                      <span class="fw-bold small">¥<%= number_with_delimiter(product.current_price) %></span>
-                      <small class="text-muted"><%= product.category.name %></small>
-                    </div>
-                    <%= link_to product_path(product), class: "btn btn-outline-primary btn-sm w-100 mt-2" do %>
-                      <i class="bi bi-eye me-1"></i>詳細
-                    <% end %>
-                  </div>
+        <p class="text-lg text-gray-600">最新の商品をご紹介します</p>
+      </div>
+      
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6">
+        <% @recent_products.each do |product| %>
+          <div class="card group hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1">
+            <div class="relative overflow-hidden rounded-t-lg">
+              <% if product.primary_image %>
+                <%= image_tag product.primary_image.image, class: "w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300" %>
+              <% else %>
+                <div class="w-full h-32 bg-gray-100 flex items-center justify-center">
+                  <span class="text-gray-400 text-xs">画像なし</span>
                 </div>
-              </div>
+              <% end %>
             </div>
-          <% end %>
-        </div>
+            
+            <div class="card-body p-4">
+              <h3 class="text-sm font-semibold text-gray-900 mb-2 line-clamp-2"><%= product.name.truncate(30) %></h3>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-sm font-bold text-gray-900">¥<%= number_with_delimiter(product.current_price) %></span>
+                <span class="text-xs text-gray-500"><%= product.category.name %></span>
+              </div>
+              <%= link_to product_path(product), class: "btn-outline btn-sm w-full flex items-center justify-center" do %>
+                <%= icon('eye', size: 6, class_name: "mr-1 w-1.5 h-1.5") %>
+                詳細
+              <% end %>
+            </div>
+          </div>
+        <% end %>
       </div>
     </div>
   <% end %>

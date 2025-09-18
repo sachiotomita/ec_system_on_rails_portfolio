@@ -1,10 +1,13 @@
 class CartController < ApplicationController
-  before_action :authenticate_user!
   layout 'store'
   before_action :set_cart
 
   def show
-    @cart_items = @cart.cart_items.includes(:product)
+    if user_signed_in?
+      @cart_items = @cart.cart_items.includes(:product)
+    else
+      @cart_items = @cart.cart_items
+    end
   end
 
   def add_item
@@ -13,9 +16,26 @@ class CartController < ApplicationController
 
     if product.in_stock?
       @cart.add_product(product, quantity)
-      redirect_to cart_path, notice: '商品をカートに追加しました。'
+      @cart.save_to_session(session) unless user_signed_in?
+      
+      if request.xhr?
+        render json: { 
+          success: true, 
+          message: '商品をカートに追加しました。',
+          cart_count: @cart.total_items
+        }
+      else
+        redirect_to cart_path, notice: '商品をカートに追加しました。'
+      end
     else
-      redirect_to product_path(product), alert: 'この商品は在庫切れです。'
+      if request.xhr?
+        render json: { 
+          success: false, 
+          message: 'この商品は在庫切れです。'
+        }
+      else
+        redirect_to product_path(product), alert: 'この商品は在庫切れです。'
+      end
     end
   end
 
@@ -24,23 +44,42 @@ class CartController < ApplicationController
     quantity = params[:quantity].to_i
 
     @cart.update_quantity(product, quantity)
+    @cart.save_to_session(session) unless user_signed_in?
     redirect_to cart_path, notice: 'カートを更新しました。'
   end
 
   def remove_item
     product = Product.find(params[:product_id])
     @cart.remove_product(product)
+    @cart.save_to_session(session) unless user_signed_in?
     redirect_to cart_path, notice: '商品をカートから削除しました。'
   end
 
   def clear
-    @cart.cart_items.destroy_all
+    if user_signed_in?
+      @cart.cart_items.destroy_all
+    else
+      @cart.session_items.clear
+      @cart.save_to_session(session)
+    end
     redirect_to cart_path, notice: 'カートを空にしました。'
+  end
+
+  def count
+    cart_count = @cart.total_items
+    render json: { count: cart_count }
   end
 
   private
 
   def set_cart
-    @cart = current_user.cart || current_user.create_cart
+    if user_signed_in?
+      @cart = current_user.cart || current_user.create_cart
+    else
+      # セッションベースのカート（ゲスト用）
+      @cart = Cart.new
+      @cart.id = session[:cart_id] if session[:cart_id]
+      @cart.load_from_session(session[:cart_items] || {})
+    end
   end
 end

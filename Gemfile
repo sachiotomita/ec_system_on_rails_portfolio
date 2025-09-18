@@ -34,6 +34,9 @@ gem "image_processing", "~> 1.2"
 # Pagination
 gem "kaminari"
 
+# Date grouping for analytics
+gem "groupdate"
+
 # Database schema management
 gem "ridgepole"
 
@@ -74,6 +77,9 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  
+  # Email preview in browser for development
+  gem "letter_opener_web"
 end
 
 group :test do

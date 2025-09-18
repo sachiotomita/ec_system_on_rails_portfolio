@@ -1,65 +1,65 @@
 <% content_for :page_title, "ダッシュボード" %>
 
 <!-- Statistics Cards -->
-<div class="row mb-4">
-  <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card border-left-primary shadow h-100 py-2">
-      <div class="card-body">
-        <div class="row no-gutters align-items-center">
-          <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">総商品数</div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= @total_products %></div>
-          </div>
-          <div class="col-auto">
-            <i class="bi bi-box text-primary" style="font-size: 2rem;"></i>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+  <div class="card">
+    <div class="card-body">
+      <div class="flex items-center">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">総商品数</p>
+          <p class="text-3xl font-bold text-gray-900"><%= @total_products %></p>
+        </div>
+        <div class="flex-shrink-0">
+          <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
+            <%= icon('home', size: 24, class_name: "text-primary-600") %>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card border-left-success shadow h-100 py-2">
-      <div class="card-body">
-        <div class="row no-gutters align-items-center">
-          <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">総注文数</div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= @total_orders %></div>
-          </div>
-          <div class="col-auto">
-            <i class="bi bi-receipt text-success" style="font-size: 2rem;"></i>
+  <div class="card">
+    <div class="card-body">
+      <div class="flex items-center">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">総注文数</p>
+          <p class="text-3xl font-bold text-gray-900"><%= @total_orders %></p>
+        </div>
+        <div class="flex-shrink-0">
+          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+            <%= icon('user', size: 24, class_name: "text-green-600") %>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card border-left-info shadow h-100 py-2">
-      <div class="card-body">
-        <div class="row no-gutters align-items-center">
-          <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">登録ユーザー数</div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= @total_users %></div>
-          </div>
-          <div class="col-auto">
-            <i class="bi bi-people text-info" style="font-size: 2rem;"></i>
+  <div class="card">
+    <div class="card-body">
+      <div class="flex items-center">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">登録ユーザー数</p>
+          <p class="text-3xl font-bold text-gray-900"><%= @total_users %></p>
+        </div>
+        <div class="flex-shrink-0">
+          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+            <%= icon('user', size: 24, class_name: "text-blue-600") %>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="col-xl-3 col-md-6 mb-4">
-    <div class="card border-left-warning shadow h-100 py-2">
-      <div class="card-body">
-        <div class="row no-gutters align-items-center">
-          <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">過去30日売上</div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800">¥<%= number_with_delimiter(@recent_sales) %></div>
-          </div>
-          <div class="col-auto">
-            <i class="bi bi-currency-yen text-warning" style="font-size: 2rem;"></i>
+  <div class="card">
+    <div class="card-body">
+      <div class="flex items-center">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">過去30日売上</p>
+          <p class="text-3xl font-bold text-gray-900">¥<%= number_with_delimiter(@recent_sales) %></p>
+        </div>
+        <div class="flex-shrink-0">
+          <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+            <%= icon('star', size: 24, class_name: "text-yellow-600") %>
           </div>
         </div>
       </div>
@@ -67,36 +67,41 @@
   </div>
 </div>
 
-<div class="row">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
   <!-- Recent Orders -->
-  <div class="col-lg-8 mb-4">
-    <div class="card shadow">
-      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">最近の注文</h6>
-        <%= link_to admin_orders_path, class: "btn btn-sm btn-primary" do %>
-          すべて見る <i class="bi bi-arrow-right"></i>
-        <% end %>
+  <div class="lg:col-span-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-semibold text-gray-900">最近の注文</h3>
+          <%= link_to admin_orders_path, class: "btn-outline btn-sm flex items-center" do %>
+            すべて見る
+            <%= icon('arrow-right', size: 16, class_name: "ml-2") %>
+          <% end %>
+        </div>
       </div>
       <div class="card-body">
-        <div class="table-responsive">
-          <table class="table table-bordered" width="100%" cellspacing="0">
-            <thead>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
               <tr>
-                <th>注文番号</th>
-                <th>顧客名</th>
-                <th>金額</th>
-                <th>ステータス</th>
-                <th>日時</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">注文番号</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">顧客名</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">金額</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ステータス</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">日時</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="bg-white divide-y divide-gray-200">
               <% @recent_orders.each do |order| %>
-                <tr>
-                  <td><%= link_to order.order_number, admin_order_path(order), class: "text-decoration-none" %></td>
-                  <td><%= order.user.full_name %></td>
-                  <td>¥<%= number_with_delimiter(order.total_amount) %></td>
-                  <td>
-                    <span class="badge bg-<%= case order.status
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <%= link_to order.order_number, admin_order_path(order), class: "text-primary-600 hover:text-primary-900 font-medium" %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= order.user.full_name %></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥<%= number_with_delimiter(order.total_amount) %></td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="badge-<%= case order.status
                       when 'pending' then 'warning'
                       when 'processing' then 'info'
                       when 'shipped' then 'primary'
@@ -114,7 +119,7 @@
                       end %>
                     </span>
                   </td>
-                  <td><%= order.created_at.strftime("%m/%d %H:%M") %></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= order.created_at.strftime("%m/%d %H:%M") %></td>
                 </tr>
               <% end %>
             </tbody>
@@ -125,35 +130,45 @@
   </div>
 
   <!-- Low Stock Products -->
-  <div class="col-lg-4 mb-4">
-    <div class="card shadow">
-      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-warning">在庫不足商品</h6>
-        <%= link_to admin_products_path(status: 'low_stock'), class: "btn btn-sm btn-warning" do %>
-          すべて見る <i class="bi bi-arrow-right"></i>
-        <% end %>
+  <div class="lg:col-span-1">
+    <div class="card">
+      <div class="card-header">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-semibold text-gray-900">在庫不足商品</h3>
+          <%= link_to admin_products_path(status: 'low_stock'), class: "btn-outline btn-sm flex items-center" do %>
+            すべて見る
+            <%= icon('arrow-right', size: 16, class_name: "ml-2") %>
+          <% end %>
+        </div>
       </div>
       <div class="card-body">
         <% if @low_stock_products.any? %>
-          <% @low_stock_products.each do |product| %>
-            <div class="d-flex align-items-center mb-3">
-              <div class="flex-shrink-0">
-                <% if product.primary_image %>
-                  <%= image_tag product.primary_image.image, class: "rounded", style: "width: 40px; height: 40px; object-fit: cover;" %>
-                <% else %>
-                  <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                    <i class="bi bi-image text-muted"></i>
-                  </div>
-                <% end %>
+          <div class="space-y-4">
+            <% @low_stock_products.each do |product| %>
+              <div class="flex items-center space-x-3">
+                <div class="flex-shrink-0">
+                  <% if product.primary_image %>
+                    <%= image_tag product.primary_image.image, class: "w-10 h-10 rounded-lg object-cover" %>
+                  <% else %>
+                    <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <%= icon('home', size: 12, class_name: "text-gray-400") %>
+                    </div>
+                  <% end %>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-900 truncate"><%= product.name.truncate(20) %></p>
+                  <p class="text-xs text-gray-500">在庫: <%= product.stock_quantity %>個</p>
+                </div>
               </div>
-              <div class="flex-grow-1 ms-3">
-                <h6 class="mb-0"><%= product.name.truncate(20) %></h6>
-                <small class="text-muted">在庫: <%= product.stock_quantity %>個</small>
-              </div>
-            </div>
-          <% end %>
+            <% end %>
+          </div>
         <% else %>
-          <p class="text-muted text-center">在庫不足の商品はありません</p>
+          <div class="text-center py-8">
+            <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <%= icon('check', size: 24, class_name: "text-gray-400") %>
+            </div>
+            <p class="text-gray-500 text-sm">在庫不足の商品はありません</p>
+          </div>
         <% end %>
       </div>
     </div>
@@ -161,36 +176,31 @@
 </div>
 
 <!-- Quick Actions -->
-<div class="row">
-  <div class="col-12">
-    <div class="card shadow">
-      <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">クイックアクション</h6>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-3 mb-3">
-            <%= link_to new_admin_product_path, class: "btn btn-primary w-100" do %>
-              <i class="bi bi-plus-circle me-2"></i>商品を追加
-            <% end %>
-          </div>
-          <div class="col-md-3 mb-3">
-            <%= link_to new_admin_category_path, class: "btn btn-success w-100" do %>
-              <i class="bi bi-tag me-2"></i>カテゴリを追加
-            <% end %>
-          </div>
-          <div class="col-md-3 mb-3">
-            <%= link_to admin_orders_path, class: "btn btn-info w-100" do %>
-              <i class="bi bi-receipt me-2"></i>注文を確認
-            <% end %>
-          </div>
-          <div class="col-md-3 mb-3">
-            <%= link_to root_path, class: "btn btn-secondary w-100" do %>
-              <i class="bi bi-shop me-2"></i>ストアフロント
-            <% end %>
-          </div>
-        </div>
-      </div>
+<div class="card">
+  <div class="card-header">
+    <h3 class="text-lg font-semibold text-gray-900">クイックアクション</h3>
+  </div>
+  <div class="card-body">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <%= link_to new_admin_product_path, class: "btn-primary flex items-center justify-center p-4 hover:shadow-lg transition-shadow" do %>
+        <%= icon('home', size: 24, class_name: "mr-3") %>
+        商品を追加
+      <% end %>
+      
+      <%= link_to new_admin_category_path, class: "btn-success flex items-center justify-center p-4 hover:shadow-lg transition-shadow" do %>
+        <%= icon('tag', size: 24, class_name: "mr-3") %>
+        カテゴリを追加
+      <% end %>
+      
+      <%= link_to admin_orders_path, class: "btn-info flex items-center justify-center p-4 hover:shadow-lg transition-shadow" do %>
+        <%= icon('user', size: 24, class_name: "mr-3") %>
+        注文を確認
+      <% end %>
+      
+      <%= link_to root_path, class: "btn-secondary flex items-center justify-center p-4 hover:shadow-lg transition-shadow" do %>
+        <%= icon('shopping-cart', size: 24, class_name: "mr-3") %>
+        ストアフロント
+      <% end %>
     </div>
   </div>
 </div>

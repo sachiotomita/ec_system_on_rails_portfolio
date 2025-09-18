@@ -1,89 +1,103 @@
-<div class="row">
-  <div class="col-md-6">
-    <% if @product.primary_image %>
-      <%= image_tag @product.primary_image.image, class: "img-fluid rounded" %>
-    <% else %>
-      <div class="bg-light d-flex align-items-center justify-content-center rounded" style="height: 400px;">
-        <span class="text-muted fs-4">画像なし</span>
-      </div>
-    <% end %>
-  </div>
-  
-  <div class="col-md-6">
-    <h1><%= @product.name %></h1>
-    <p class="text-muted"><%= @product.category.name %></p>
-    
-    <div class="mb-3">
-      <% if @product.on_sale? %>
-        <span class="text-decoration-line-through text-muted fs-5">¥<%= number_with_delimiter(@product.price) %></span>
-        <span class="text-danger fw-bold fs-4">¥<%= number_with_delimiter(@product.sale_price) %></span>
-        <span class="badge bg-danger ms-2">セール中</span>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <!-- Product Image -->
+    <div>
+      <% if @product.primary_image %>
+        <%= image_tag @product.primary_image.image, class: "w-full h-96 object-cover rounded-lg shadow-lg" %>
       <% else %>
-        <span class="fw-bold fs-4">¥<%= number_with_delimiter(@product.price) %></span>
-      <% end %>
-    </div>
-    
-    <div class="mb-3">
-      <span class="badge bg-<%= @product.in_stock? ? 'success' : 'danger' %>">
-        <%= @product.in_stock? ? "在庫あり (#{@product.stock_quantity}個)" : "在庫切れ" %>
-      </span>
-    </div>
-    
-    <div class="mb-4">
-      <h5>商品説明</h5>
-      <p><%= simple_format(@product.description) %></p>
-    </div>
-    
-    <% if @product.in_stock? %>
-      <%= form_with url: cart_add_item_path, method: :post, local: true, class: "mb-4" do |f| %>
-        <div class="row">
-          <div class="col-4">
-            <%= f.label :quantity, "数量", class: "form-label" %>
-            <%= f.number_field :quantity, value: 1, min: 1, max: @product.stock_quantity, class: "form-control" %>
-          </div>
-          <div class="col-8 d-flex align-items-end">
-            <%= f.hidden_field :product_id, value: @product.id %>
-            <%= f.submit "カートに追加", class: "btn btn-primary btn-lg" %>
-          </div>
+        <div class="w-full h-96 bg-gray-100 flex items-center justify-center rounded-lg">
+          <span class="text-gray-400 text-2xl">画像なし</span>
         </div>
       <% end %>
-    <% else %>
-      <button class="btn btn-secondary btn-lg" disabled>在庫切れのため購入できません</button>
-    <% end %>
+    </div>
+    
+    <!-- Product Details -->
+    <div class="space-y-6">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2"><%= @product.name %></h1>
+        <p class="text-gray-600 text-lg"><%= @product.category.name %></p>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <% if @product.on_sale? %>
+          <div class="flex items-center space-x-2">
+            <span class="text-xl text-gray-500 line-through">¥<%= number_with_delimiter(@product.price) %></span>
+            <span class="text-3xl font-bold text-red-600">¥<%= number_with_delimiter(@product.sale_price) %></span>
+          </div>
+          <span class="badge-danger">セール中</span>
+        <% else %>
+          <span class="text-3xl font-bold text-gray-900">¥<%= number_with_delimiter(@product.price) %></span>
+        <% end %>
+      </div>
+      
+      <div>
+        <span class="badge-<%= @product.in_stock? ? 'success' : 'danger' %> text-lg">
+          <%= @product.in_stock? ? "在庫あり (#{@product.stock_quantity}個)" : "在庫切れ" %>
+        </span>
+      </div>
+      
+      <div class="prose max-w-none">
+        <h3 class="text-xl font-semibold text-gray-900 mb-3">商品説明</h3>
+        <div class="text-gray-700 leading-relaxed">
+          <%= simple_format(@product.description) %>
+        </div>
+      </div>
+      
+      <% if @product.in_stock? %>
+        <div class="space-y-4">
+          <div class="flex items-end space-x-4">
+            <div class="flex-1">
+              <label for="quantity" class="form-label">数量</label>
+              <input type="number" id="quantity" value="1" min="1" max="<%= @product.stock_quantity %>" class="form-input">
+            </div>
+            <div class="flex-1">
+              <button onclick="addToCart(<%= @product.id %>, document.getElementById('quantity').value)" class="btn-primary btn-lg w-full flex items-center justify-center">
+                <%= icon('shopping-cart', size: 9, class_name: "mr-2 w-5 h-5") %>
+                カートに追加
+              </button>
+            </div>
+          </div>
+        </div>
+      <% else %>
+        <button class="btn-secondary btn-lg w-full flex items-center justify-center" disabled>
+          <%= icon('x-mark', size: 9, class_name: "mr-2 w-5 h-5") %>
+          在庫切れのため購入できません
+        </button>
+      <% end %>
+    </div>
   </div>
 </div>
 
 <!-- Related Products -->
 <% if @related_products.any? %>
-  <div class="row mt-5">
-    <div class="col-12">
-      <h3>関連商品</h3>
-      <div class="row">
-        <% @related_products.each do |product| %>
-          <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100">
-              <% if product.primary_image %>
-                <%= image_tag product.primary_image.image, class: "card-img-top", style: "height: 200px; object-fit: cover;" %>
-              <% else %>
-                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                  <span class="text-muted">画像なし</span>
-                </div>
-              <% end %>
-              
-              <div class="card-body d-flex flex-column">
-                <h6 class="card-title"><%= product.name %></h6>
-                <div class="mt-auto">
-                  <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="fw-bold">¥<%= number_with_delimiter(product.current_price) %></span>
-                    <small class="text-muted">在庫: <%= product.stock_quantity %></small>
-                  </div>
-                  <%= link_to "詳細を見る", product_path(product), class: "btn btn-outline-primary btn-sm" %>
-                </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h3 class="text-2xl font-bold text-gray-900 mb-8">関連商品</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <% @related_products.each do |product| %>
+        <div class="card group hover:shadow-xl transition-shadow duration-300">
+          <div class="relative overflow-hidden rounded-t-lg">
+            <% if product.primary_image %>
+              <%= image_tag product.primary_image.image, class: "w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" %>
+            <% else %>
+              <div class="w-full h-48 bg-gray-100 flex items-center justify-center">
+                <span class="text-gray-400">画像なし</span>
               </div>
-            </div>
+            <% end %>
           </div>
-        <% end %>
-      </div>
+          
+          <div class="card-body">
+            <h4 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2"><%= product.name %></h4>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-lg font-bold text-gray-900">¥<%= number_with_delimiter(product.current_price) %></span>
+              <span class="text-xs text-gray-500">在庫: <%= product.stock_quantity %></span>
+            </div>
+            <%= link_to product_path(product), class: "btn-outline btn-sm w-full flex items-center justify-center" do %>
+              <%= icon('eye', size: 16, class_name: "mr-2 w-4 h-4") %>
+              詳細を見る
+            <% end %>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 <% end %>

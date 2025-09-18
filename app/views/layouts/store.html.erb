@@ -17,9 +17,6 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
     
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
-
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
@@ -27,143 +24,320 @@
 
   <body>
     <!-- Store Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-      <div class="container">
-        <%= link_to "EC Portfolio Store", root_path, class: "navbar-brand fw-bold" %>
-        
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-              <%= link_to root_path, class: "nav-link" do %>
-                <i class="bi bi-house me-1"></i>ホーム
+    <nav class="bg-primary-600 shadow-lg">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex">
+            <div class="flex-shrink-0 flex items-center">
+              <%= link_to root_path, class: "text-white text-xl font-bold hover:text-primary-200 transition-colors" do %>
+                EC Portfolio Store
               <% end %>
-            </li>
-            <li class="nav-item">
-              <%= link_to products_path, class: "nav-link" do %>
-                <i class="bi bi-grid-3x3-gap me-1"></i>商品一覧
+            </div>
+            <div class="hidden sm:ml-6 sm:flex sm:space-x-6">
+              <%= link_to root_path, class: "text-primary-100 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center transition-colors" do %>
+                <%= icon('home', size: 10, class_name: "mr-2") %>
+                ホーム
               <% end %>
-            </li>
-            <li class="nav-item">
-              <%= link_to cart_path, class: "nav-link" do %>
-                <i class="bi bi-cart me-1"></i>カート
-                <% if user_signed_in? && current_user.cart&.cart_items&.any? %>
-                  <span class="badge bg-danger ms-1"><%= current_user.cart.cart_items.sum(:quantity) %></span>
+              <%= link_to products_path, class: "text-primary-100 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center transition-colors" do %>
+                <%= icon('home', size: 10, class_name: "mr-2") %>
+                商品一覧
+              <% end %>
+              <% if user_signed_in? %>
+                <%= link_to orders_path, class: "text-primary-100 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center transition-colors" do %>
+                  <%= icon('user', size: 10, class_name: "mr-2") %>
+                  注文履歴
                 <% end %>
               <% end %>
-            </li>
-            <li class="nav-item">
-              <%= link_to orders_path, class: "nav-link" do %>
-                <i class="bi bi-receipt me-1"></i>注文履歴
-              <% end %>
-            </li>
-          </ul>
+            </div>
+          </div>
           
-          <ul class="navbar-nav">
-            <% if user_signed_in? %>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                  <i class="bi bi-person-circle me-1"></i><%= current_user.full_name %>
-                </a>
-                <ul class="dropdown-menu">
-                  <li><%= link_to "プロフィール", edit_user_registration_path, class: "dropdown-item" %></li>
-                  <% if current_user.admin? %>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><%= link_to "管理画面", admin_root_path, class: "dropdown-item text-warning" %></li>
-                  <% end %>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "dropdown-item" %></li>
-                </ul>
-              </li>
-            <% else %>
-              <li class="nav-item">
-                <%= link_to "ログイン", new_user_session_path, class: "nav-link" %>
-              </li>
-              <li class="nav-item">
-                <%= link_to "新規登録", new_user_registration_path, class: "btn btn-outline-light btn-sm ms-2" %>
-              </li>
+          <div class="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
+            <!-- カート -->
+            <%= link_to cart_path, class: "text-primary-100 hover:text-white px-2 py-2 rounded-md text-sm font-medium flex items-center justify-center transition-colors relative min-w-[40px]" do %>
+              <%= icon('shopping-cart', size: 10) %>
+              <span id="cart-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">
+                0
+              </span>
             <% end %>
-          </ul>
+            
+            <% if user_signed_in? %>
+              <div class="relative">
+                <button class="text-primary-100 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center" onclick="toggleDropdown()">
+                  <%= icon('user', size: 10, class_name: "mr-2") %>
+                  <%= current_user.full_name %>
+                  <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+                <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                  <%= link_to edit_user_registration_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
+                    プロフィール
+                  <% end %>
+                  <% if current_user.admin? %>
+                    <div class="border-t border-gray-100"></div>
+                    <%= link_to admin_root_path, class: "block px-4 py-2 text-sm text-yellow-600 hover:bg-gray-100" do %>
+                      管理画面
+                    <% end %>
+                  <% end %>
+                  <div class="border-t border-gray-100"></div>
+                  <%= link_to destroy_user_session_path, method: :delete, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
+                    ログアウト
+                  <% end %>
+                </div>
+              </div>
+            <% else %>
+              <%= link_to "ログイン", new_user_session_path, class: "text-primary-100 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors" %>
+              <%= link_to "新規登録", new_user_registration_path, class: "bg-white text-primary-600 hover:bg-primary-50 px-4 py-2 rounded-md text-sm font-medium transition-colors" %>
+            <% end %>
+          </div>
+          
+          <!-- Mobile menu button -->
+          <div class="sm:hidden flex items-center">
+            <button class="text-primary-100 hover:text-white p-2" onclick="toggleMobileMenu()">
+              <%= icon('bars-3', size: 24) %>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobileMenu" class="hidden sm:hidden">
+          <div class="pt-2 pb-3 space-y-1">
+            <%= link_to root_path, class: "text-primary-100 hover:text-white block px-3 py-2 rounded-md text-base font-medium flex items-center" do %>
+              <%= icon('home', size: 10, class_name: "mr-2") %>
+              ホーム
+            <% end %>
+            <%= link_to products_path, class: "text-primary-100 hover:text-white block px-3 py-2 rounded-md text-base font-medium flex items-center" do %>
+              <%= icon('home', size: 10, class_name: "mr-2") %>
+              商品一覧
+            <% end %>
+            <%= link_to cart_path, class: "text-primary-100 hover:text-white block px-3 py-2 rounded-md text-base font-medium flex items-center relative" do %>
+              <%= icon('shopping-cart', size: 10, class_name: "mr-2") %>
+              カート
+              <span id="mobile-cart-badge" class="ml-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">
+                0
+              </span>
+            <% end %>
+            <% if user_signed_in? %>
+              <%= link_to orders_path, class: "text-primary-100 hover:text-white block px-3 py-2 rounded-md text-base font-medium flex items-center" do %>
+                <%= icon('user', size: 10, class_name: "mr-2") %>
+                注文履歴
+              <% end %>
+            <% end %>
+          </div>
+          <div class="pt-4 pb-3 border-t border-primary-500">
+            <% if user_signed_in? %>
+              <div class="px-3 py-2 text-base font-medium text-white">
+                <%= current_user.full_name %>
+              </div>
+              <div class="mt-3 space-y-1">
+                <%= link_to edit_user_registration_path, class: "text-primary-100 hover:text-white block px-3 py-2 rounded-md text-base font-medium" do %>
+                  プロフィール
+                <% end %>
+                <% if current_user.admin? %>
+                  <%= link_to admin_root_path, class: "text-yellow-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium" do %>
+                    管理画面
+                  <% end %>
+                <% end %>
+                <%= link_to destroy_user_session_path, method: :delete, class: "text-primary-100 hover:text-white block px-3 py-2 rounded-md text-base font-medium" do %>
+                  ログアウト
+                <% end %>
+              </div>
+            <% else %>
+              <%= link_to "ログイン", new_user_session_path, class: "text-primary-100 hover:text-white block px-3 py-2 rounded-md text-base font-medium" %>
+              <%= link_to "新規登録", new_user_registration_path, class: "text-primary-100 hover:text-white block px-3 py-2 rounded-md text-base font-medium" %>
+            <% end %>
+          </div>
         </div>
       </div>
     </nav>
 
     <!-- Flash Messages -->
     <% if notice %>
-      <div class="alert alert-success alert-dismissible fade show m-0" role="alert">
-        <div class="container">
+      <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 flex items-center justify-between" role="alert">
+        <div class="flex items-center">
+          <%= icon('check', size: 12, class_name: "mr-2") %>
           <%= notice %>
-          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+        <button type="button" class="text-green-400 hover:text-green-600" onclick="this.parentElement.style.display='none'">
+          <%= icon('x-mark', size: 12) %>
+        </button>
       </div>
     <% end %>
     
     <% if alert %>
-      <div class="alert alert-danger alert-dismissible fade show m-0" role="alert">
-        <div class="container">
+      <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 flex items-center justify-between" role="alert">
+        <div class="flex items-center">
+          <%= icon('exclamation-triangle', size: 12, class_name: "mr-2") %>
           <%= alert %>
-          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+        <button type="button" class="text-red-400 hover:text-red-600" onclick="this.parentElement.style.display='none'">
+          <%= icon('x-mark', size: 12) %>
+        </button>
       </div>
     <% end %>
 
     <!-- Main Content -->
-    <main>
+    <main class="min-h-screen">
       <%= yield %>
     </main>
 
     <!-- Store Footer -->
-    <footer class="bg-dark text-light mt-5 py-5">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-4">
-            <h5 class="fw-bold">EC Portfolio Store</h5>
-            <p class="text-muted">Rails 8で構築されたポートフォリオ用ECサイトです。</p>
-            <div class="d-flex gap-3">
-              <a href="#" class="text-light"><i class="bi bi-twitter fs-4"></i></a>
-              <a href="#" class="text-light"><i class="bi bi-facebook fs-4"></i></a>
-              <a href="#" class="text-light"><i class="bi bi-instagram fs-4"></i></a>
+    <footer class="bg-gray-900 text-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <h5 class="text-lg font-semibold mb-4">EC Portfolio Store</h5>
+            <p class="text-gray-300 mb-4">Rails 8で構築されたポートフォリオ用ECサイトです。</p>
+            <div class="flex space-x-4">
+              <a href="#" class="text-gray-300 hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                </svg>
+              </a>
+              <a href="#" class="text-gray-300 hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
+              <a href="#" class="text-gray-300 hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.746-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001.012.001z"/>
+                </svg>
+              </a>
             </div>
           </div>
-          <div class="col-md-2">
-            <h6 class="fw-bold">ショッピング</h6>
-            <ul class="list-unstyled">
-              <li><%= link_to "商品一覧", products_path, class: "text-muted text-decoration-none" %></li>
-              <li><%= link_to "カテゴリ", products_path, class: "text-muted text-decoration-none" %></li>
-              <li><%= link_to "おすすめ商品", root_path, class: "text-muted text-decoration-none" %></li>
+          <div>
+            <h6 class="font-semibold mb-4">ショッピング</h6>
+            <ul class="space-y-2">
+              <li><%= link_to "商品一覧", products_path, class: "text-gray-300 hover:text-white transition-colors" %></li>
+              <li><%= link_to "カテゴリ", products_path, class: "text-gray-300 hover:text-white transition-colors" %></li>
+              <li><%= link_to "おすすめ商品", root_path, class: "text-gray-300 hover:text-white transition-colors" %></li>
             </ul>
           </div>
-          <div class="col-md-2">
-            <h6 class="fw-bold">サポート</h6>
-            <ul class="list-unstyled">
-              <li><a href="#" class="text-muted text-decoration-none">お問い合わせ</a></li>
-              <li><a href="#" class="text-muted text-decoration-none">配送について</a></li>
-              <li><a href="#" class="text-muted text-decoration-none">返品・交換</a></li>
+          <div>
+            <h6 class="font-semibold mb-4">サポート</h6>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-gray-300 hover:text-white transition-colors">お問い合わせ</a></li>
+              <li><a href="#" class="text-gray-300 hover:text-white transition-colors">配送について</a></li>
+              <li><a href="#" class="text-gray-300 hover:text-white transition-colors">返品・交換</a></li>
             </ul>
           </div>
-          <div class="col-md-4">
-            <h6 class="fw-bold">技術スタック</h6>
-            <ul class="list-unstyled text-muted">
+          <div>
+            <h6 class="font-semibold mb-4">技術スタック</h6>
+            <ul class="space-y-2 text-gray-300">
               <li>Ruby on Rails 8</li>
               <li>PostgreSQL</li>
-              <li>Bootstrap 5</li>
+              <li>Tailwind CSS</li>
               <li>Docker</li>
             </ul>
           </div>
         </div>
-        <hr class="my-4">
-        <div class="row align-items-center">
-          <div class="col-md-6">
-            <p class="text-muted mb-0">&copy; 2024 EC Portfolio Store. All rights reserved.</p>
-          </div>
-          <div class="col-md-6 text-end">
-            <small class="text-muted">ポートフォリオ用プロジェクト</small>
-          </div>
+        <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <p class="text-gray-400">&copy; 2024 EC Portfolio Store. All rights reserved.</p>
+          <p class="text-gray-400 text-sm mt-2 md:mt-0">ポートフォリオ用プロジェクト</p>
         </div>
       </div>
     </footer>
+
+    <script>
+      function toggleDropdown() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('hidden');
+      }
+
+      function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        menu.classList.toggle('hidden');
+      }
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('userDropdown');
+        const button = event.target.closest('button');
+        if (dropdown && !dropdown.contains(event.target) && !button) {
+          dropdown.classList.add('hidden');
+        }
+      });
+
+      // カートバッジの更新
+      function updateCartBadge() {
+        fetch('/cart/count', {
+          method: 'GET',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          const cartBadge = document.getElementById('cart-badge');
+          const mobileCartBadge = document.getElementById('mobile-cart-badge');
+          
+          if (data.count > 0) {
+            cartBadge.textContent = data.count;
+            cartBadge.classList.remove('hidden');
+            mobileCartBadge.textContent = data.count;
+            mobileCartBadge.classList.remove('hidden');
+          } else {
+            cartBadge.classList.add('hidden');
+            mobileCartBadge.classList.add('hidden');
+          }
+        })
+        .catch(error => console.error('Error:', error));
+      }
+
+      // ページ読み込み時にカートバッジを更新
+      document.addEventListener('DOMContentLoaded', function() {
+        updateCartBadge();
+      });
+
+      // カート追加のAjax処理
+      function addToCart(productId, quantity = 1) {
+        const formData = new FormData();
+        formData.append('product_id', productId);
+        formData.append('quantity', quantity);
+        formData.append('authenticity_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+        fetch('/cart/add_item', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // 成功メッセージを表示
+            showNotification('商品をカートに追加しました', 'success');
+            // カートバッジを更新
+            updateCartBadge();
+          } else {
+            showNotification(data.message || 'エラーが発生しました', 'error');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showNotification('エラーが発生しました', 'error');
+        });
+      }
+
+      // 通知表示
+      function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 z-50 p-4 rounded-md shadow-lg ${
+          type === 'success' ? 'bg-green-500 text-white' : 
+          type === 'error' ? 'bg-red-500 text-white' : 
+          'bg-blue-500 text-white'
+        }`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.remove();
+        }, 3000);
+      }
+    </script>
   </body>
 </html>

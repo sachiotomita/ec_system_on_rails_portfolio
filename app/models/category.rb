@@ -6,7 +6,7 @@ class Category < ApplicationRecord
 
   scope :active, -> { where(active: true) }
 
-  before_validation :generate_slug, on: :create
+  before_validation :generate_slug
 
   private
 

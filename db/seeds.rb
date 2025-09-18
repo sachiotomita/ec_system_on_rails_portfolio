@@ -3,26 +3,26 @@
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
 # 管理者ユーザーの作成
-admin_user = User.find_or_create_by!(email: 'admin@example.com') do |user|
-  user.password = 'password123'
-  user.password_confirmation = 'password123'
-  user.first_name = 'Admin'
-  user.last_name = 'User'
-  user.admin = true
-end
+admin_user = User.find_or_initialize_by(email: 'admin@example.com')
+admin_user.password = 'password123'
+admin_user.password_confirmation = 'password123'
+admin_user.first_name = 'Admin'
+admin_user.last_name = 'User'
+admin_user.admin = true
+admin_user.save!
 
 # 一般ユーザーの作成
-user = User.find_or_create_by!(email: 'user@example.com') do |user|
-  user.password = 'password123'
-  user.password_confirmation = 'password123'
-  user.first_name = 'Test'
-  user.last_name = 'User'
-  user.phone = '090-1234-5678'
-  user.address = '東京都渋谷区1-1-1'
-  user.city = '渋谷区'
-  user.state = '東京都'
-  user.postal_code = '150-0001'
-end
+user = User.find_or_initialize_by(email: 'user@example.com')
+user.password = 'password123'
+user.password_confirmation = 'password123'
+user.first_name = 'Test'
+user.last_name = 'User'
+user.phone = '090-1234-5678'
+user.address = '東京都渋谷区1-1-1'
+user.city = '渋谷区'
+user.state = '東京都'
+user.postal_code = '150-0001'
+user.save!
 
 # カテゴリの作成
 categories = [
@@ -34,9 +34,28 @@ categories = [
 ]
 
 categories.each do |cat_data|
-  Category.find_or_create_by!(name: cat_data[:name]) do |category|
-    category.description = cat_data[:description]
-    category.slug = cat_data[:name].parameterize
+  category = Category.find_or_initialize_by(name: cat_data[:name])
+  category.description = cat_data[:description]
+  # 日本語のスラッグを手動で設定
+  category.slug = case cat_data[:name]
+  when 'エレクトロニクス'
+    'electronics'
+  when 'ファッション'
+    'fashion'
+  when 'ホーム&キッチン'
+    'home-kitchen'
+  when 'スポーツ&アウトドア'
+    'sports-outdoor'
+  when '本&メディア'
+    'books-media'
+  else
+    cat_data[:name].parameterize
+  end
+  
+  puts "Creating category: #{cat_data[:name]} with slug: #{category.slug}"
+  
+  unless category.save
+    puts "Category validation errors: #{category.errors.full_messages}"
   end
 end
 
@@ -98,16 +117,107 @@ products = [
 ]
 
 products.each do |product_data|
-  Product.find_or_create_by!(sku: product_data[:sku]) do |product|
-    product.name = product_data[:name]
-    product.description = product_data[:description]
-    product.short_description = product_data[:short_description]
-    product.price = product_data[:price]
-    product.sale_price = product_data[:sale_price] if product_data[:sale_price]
-    product.stock_quantity = product_data[:stock_quantity]
-    product.category = product_data[:category]
-    product.featured = product_data[:featured] || false
-    product.slug = product_data[:name].parameterize
+  product = Product.find_or_initialize_by(sku: product_data[:sku])
+  product.name = product_data[:name]
+  product.description = product_data[:description]
+  product.short_description = product_data[:short_description]
+  product.price = product_data[:price]
+  product.sale_price = product_data[:sale_price] if product_data[:sale_price]
+  product.stock_quantity = product_data[:stock_quantity]
+  product.category = product_data[:category]
+  product.featured = product_data[:featured] || false
+  # 商品のスラッグを手動で設定
+  product.slug = case product_data[:name]
+  when 'iPhone 15 Pro'
+    'iphone-15-pro'
+  when 'MacBook Air M2'
+    'macbook-air-m2'
+  when 'Nike Air Max 270'
+    'nike-air-max-270'
+  when '無印良品 ソファ'
+    'muji-sofa'
+  when 'Dyson V15 Detect'
+    'dyson-v15-detect'
+  else
+    product_data[:name].parameterize
+  end
+  product.save!
+  
+  # 商品画像を追加（picsum.photosを使用）
+  case product_data[:name]
+  when 'iPhone 15 Pro'
+    # メイン画像
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=1',
+      alt_text: 'iPhone 15 Pro フロント',
+      position: 1,
+      primary: true
+    )
+    # 追加画像
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=2',
+      alt_text: 'iPhone 15 Pro バック',
+      position: 2,
+      primary: false
+    )
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=3',
+      alt_text: 'iPhone 15 Pro サイド',
+      position: 3,
+      primary: false
+    )
+  when 'MacBook Air M2'
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=4',
+      alt_text: 'MacBook Air M2',
+      position: 1,
+      primary: true
+    )
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=5',
+      alt_text: 'MacBook Air M2 開いた状態',
+      position: 2,
+      primary: false
+    )
+  when 'Nike Air Max 270'
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=6',
+      alt_text: 'Nike Air Max 270',
+      position: 1,
+      primary: true
+    )
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=7',
+      alt_text: 'Nike Air Max 270 サイド',
+      position: 2,
+      primary: false
+    )
+  when '無印良品 ソファ'
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=8',
+      alt_text: '無印良品 ソファ',
+      position: 1,
+      primary: true
+    )
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=9',
+      alt_text: '無印良品 ソファ 詳細',
+      position: 2,
+      primary: false
+    )
+  when 'Dyson V15 Detect'
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=10',
+      alt_text: 'Dyson V15 Detect',
+      position: 1,
+      primary: true
+    )
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=11',
+      alt_text: 'Dyson V15 Detect アクセサリー',
+      position: 2,
+      primary: false
+    )
   end
 end
 
@@ -116,3 +226,4 @@ puts "- 管理者ユーザー: admin@example.com / password123"
 puts "- 一般ユーザー: user@example.com / password123"
 puts "- カテゴリ: #{Category.count}件"
 puts "- 商品: #{Product.count}件"
+puts "- 商品画像: #{ProductImage.count}件"

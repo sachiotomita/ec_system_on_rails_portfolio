@@ -1,100 +1,137 @@
-<div class="row">
-  <div class="col-12">
-    <h1 class="mb-4">ショッピングカート</h1>
-    
-    <% if @cart_items.any? %>
-      <div class="row">
-        <div class="col-md-8">
-          <% @cart_items.each do |item| %>
-            <div class="card mb-3">
-              <div class="card-body">
-                <div class="row align-items-center">
-                  <div class="col-md-2">
-                    <% if item.product.primary_image %>
-                      <%= image_tag item.product.primary_image.image, class: "img-fluid rounded", style: "height: 80px; object-fit: cover;" %>
-                    <% else %>
-                      <div class="bg-light d-flex align-items-center justify-content-center rounded" style="height: 80px;">
-                        <span class="text-muted small">画像なし</span>
-                      </div>
-                    <% end %>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <h1 class="text-3xl font-bold text-gray-900 mb-8">ショッピングカート</h1>
+  
+  <% if @cart_items.any? %>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Cart Items -->
+      <div class="lg:col-span-2 space-y-4">
+        <% @cart_items.each do |item| %>
+          <div class="card">
+            <div class="card-body">
+              <div class="flex items-center space-x-4">
+                <div class="flex-shrink-0">
+                  <% if item.product.primary_image %>
+                    <%= image_tag item.product.primary_image.image, class: "w-20 h-20 object-cover rounded-lg" %>
+                  <% else %>
+                    <div class="w-20 h-20 bg-gray-100 flex items-center justify-center rounded-lg">
+                      <span class="text-gray-400 text-xs">画像なし</span>
+                    </div>
+                  <% end %>
+                </div>
+                
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-lg font-semibold text-gray-900 truncate"><%= item.product.name %></h3>
+                  <p class="text-sm text-gray-500"><%= item.product.category.name %></p>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                  <div class="text-right">
+                    <div class="text-lg font-semibold text-gray-900">¥<%= number_with_delimiter(item.product.current_price) %></div>
                   </div>
                   
-                  <div class="col-md-4">
-                    <h6 class="card-title"><%= item.product.name %></h6>
-                    <p class="text-muted small"><%= item.product.category.name %></p>
-                  </div>
-                  
-                  <div class="col-md-2">
-                    <span class="fw-bold">¥<%= number_with_delimiter(item.product.current_price) %></span>
-                  </div>
-                  
-                  <div class="col-md-2">
-                    <%= form_with url: cart_update_item_path, method: :patch, local: true, class: "d-flex" do |f| %>
+                  <div class="flex items-center space-x-2">
+                    <%= form_with url: cart_update_item_path, method: :patch, local: true, class: "flex items-center space-x-2" do |f| %>
                       <%= f.hidden_field :product_id, value: item.product.id %>
-                      <%= f.number_field :quantity, value: item.quantity, min: 1, max: item.product.stock_quantity, class: "form-control form-control-sm" %>
-                      <%= f.submit "更新", class: "btn btn-outline-primary btn-sm ms-1" %>
+                      <%= f.number_field :quantity, value: item.quantity, min: 1, max: item.product.stock_quantity, class: "w-16 form-input text-center" %>
+                      <%= f.submit "更新", class: "btn-outline btn-sm" %>
                     <% end %>
                   </div>
                   
-                  <div class="col-md-1">
-                    <span class="fw-bold">¥<%= number_with_delimiter(item.total_price) %></span>
+                  <div class="text-right">
+                    <div class="text-lg font-bold text-gray-900">¥<%= number_with_delimiter(item.total_price) %></div>
                   </div>
                   
-                  <div class="col-md-1">
+                  <div>
                     <%= link_to cart_remove_item_path(product_id: item.product.id), method: :delete, 
-                                class: "btn btn-outline-danger btn-sm", 
+                                class: "text-red-600 hover:text-red-800 p-2", 
                                 data: { confirm: "この商品をカートから削除しますか？" } do %>
-                      <i class="bi bi-trash"></i>
+                      <%= icon('trash', size: 12, class_name: "w-5 h-5") %>
                     <% end %>
                   </div>
                 </div>
               </div>
             </div>
-          <% end %>
-          
-          <div class="d-flex justify-content-between">
-            <%= link_to "買い物を続ける", products_path, class: "btn btn-outline-secondary" %>
-            <%= link_to "カートを空にする", cart_clear_path, method: :delete, 
-                        class: "btn btn-outline-danger", 
-                        data: { confirm: "カートを空にしますか？" } %>
           </div>
-        </div>
+        <% end %>
         
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-header">
-              <h5 class="mb-0">注文合計</h5>
+        <div class="flex justify-between pt-4">
+          <%= link_to products_path, class: "btn-outline flex items-center" do %>
+            <%= icon('arrow-left', size: 12, class_name: "mr-2 w-5 h-5") %>
+            買い物を続ける
+          <% end %>
+          <%= link_to cart_clear_path, method: :delete, 
+                      class: "btn-danger flex items-center", 
+                      data: { confirm: "カートを空にしますか？" } do %>
+            <%= icon('trash', size: 12, class_name: "mr-2 w-5 h-5") %>
+            カートを空にする
+          <% end %>
+        </div>
+      </div>
+      
+      <!-- Order Summary -->
+      <div class="lg:col-span-1">
+        <div class="card sticky top-8">
+          <div class="card-header">
+            <h3 class="text-lg font-semibold text-gray-900">注文合計</h3>
+          </div>
+          <div class="card-body space-y-4">
+            <div class="flex justify-between">
+              <span class="text-gray-600">小計:</span>
+              <span class="font-semibold">¥<%= number_with_delimiter(@cart.total_price) %></span>
             </div>
-            <div class="card-body">
-              <div class="d-flex justify-content-between mb-2">
-                <span>小計:</span>
-                <span>¥<%= number_with_delimiter(@cart.total_price) %></span>
-              </div>
-              <div class="d-flex justify-content-between mb-2">
-                <span>送料:</span>
-                <span>¥<%= number_with_delimiter(@cart.total_price >= 5000 ? 0 : 500) %></span>
-              </div>
-              <div class="d-flex justify-content-between mb-2">
-                <span>消費税:</span>
-                <span>¥<%= number_with_delimiter((@cart.total_price * 0.1).round) %></span>
-              </div>
-              <hr>
-              <div class="d-flex justify-content-between mb-3">
-                <span class="fw-bold">合計:</span>
-                <span class="fw-bold">¥<%= number_with_delimiter((@cart.total_price * 1.1 + (@cart.total_price >= 5000 ? 0 : 500)).round) %></span>
-              </div>
-              
-              <%= link_to "レジに進む", new_order_path, class: "btn btn-primary btn-lg w-100" %>
+            <div class="flex justify-between">
+              <span class="text-gray-600">送料:</span>
+              <span class="font-semibold">¥<%= number_with_delimiter(@cart.total_price >= 5000 ? 0 : 500) %></span>
             </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">消費税:</span>
+              <span class="font-semibold">¥<%= number_with_delimiter((@cart.total_price * 0.1).round) %></span>
+            </div>
+            <div class="border-t border-gray-200 pt-4">
+              <div class="flex justify-between text-lg">
+                <span class="font-bold text-gray-900">合計:</span>
+                <span class="font-bold text-gray-900">¥<%= number_with_delimiter((@cart.total_price * 1.1 + (@cart.total_price >= 5000 ? 0 : 500)).round) %></span>
+              </div>
+            </div>
+            
+            <% if user_signed_in? %>
+              <%= link_to new_order_path, class: "btn-primary btn-lg w-full flex items-center justify-center mt-6" do %>
+                <%= icon('shopping-cart', size: 24, class_name: "mr-2 w-6 h-6") %>
+                レジに進む
+              <% end %>
+            <% else %>
+              <div class="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <div class="flex items-center mb-2">
+                  <%= icon('exclamation-triangle', size: 12, class_name: "text-yellow-600 mr-2 w-5 h-5") %>
+                  <p class="text-sm font-medium text-yellow-800">注文するにはログインが必要です</p>
+                </div>
+                <div class="flex space-x-2">
+                  <%= link_to new_user_session_path, class: "btn-primary btn-sm flex-1 flex items-center justify-center" do %>
+                    <%= icon('user', size: 16, class_name: "mr-2 w-4 h-4") %>
+                    ログイン
+                  <% end %>
+                  <%= link_to new_user_registration_path, class: "btn-outline btn-sm flex-1 flex items-center justify-center" do %>
+                    <%= icon('user', size: 16, class_name: "mr-2 w-4 h-4") %>
+                    新規登録
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
           </div>
         </div>
       </div>
-    <% else %>
-      <div class="text-center py-5">
-        <h3 class="text-muted">カートが空です</h3>
-        <p class="text-muted">商品をカートに追加してください。</p>
-        <%= link_to "商品一覧を見る", products_path, class: "btn btn-primary" %>
+    </div>
+  <% else %>
+    <div class="text-center py-16">
+      <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <%= icon('shopping-cart', size: 48, class_name: "text-gray-400 w-12 h-12") %>
       </div>
-    <% end %>
-  </div>
+      <h3 class="text-2xl font-semibold text-gray-900 mb-4">カートが空です</h3>
+      <p class="text-gray-600 mb-8">商品をカートに追加してください。</p>
+      <%= link_to products_path, class: "btn-primary btn-lg flex items-center justify-center mx-auto w-64" do %>
+        <%= icon('home', size: 24, class_name: "mr-2 w-6 h-6") %>
+        商品一覧を見る
+      <% end %>
+    </div>
+  <% end %>
 </div>

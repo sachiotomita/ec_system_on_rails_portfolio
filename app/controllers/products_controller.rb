@@ -1,5 +1,4 @@
 class ProductsController < ApplicationController
-  before_action :authenticate_user!
   layout 'store'
   before_action :set_product, only: [:show]
   before_action :set_categories
@@ -7,15 +6,14 @@ class ProductsController < ApplicationController
   def index
     @products = Product.includes(:category, :product_images)
                       .active
-                      .page(params[:page])
-                      .per(12)
+                      .limit(12)
     
     if params[:category_id].present?
       @products = @products.where(category_id: params[:category_id])
     end
 
     if params[:search].present?
-      @products = @products.where("name ILIKE ? OR description ILIKE ?", 
+      @products = @products.where("name LIKE ? OR description LIKE ?", 
                                  "%#{params[:search]}%", "%#{params[:search]}%")
     end
 

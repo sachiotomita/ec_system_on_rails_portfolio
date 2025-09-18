@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:new]
   layout 'store'
   before_action :set_order, only: [:show, :cancel]
 
@@ -15,8 +15,13 @@ class OrdersController < ApplicationController
   end
 
   def new
-    @cart = current_user.cart
-    redirect_to cart_path, alert: 'カートが空です。' if @cart.empty?
+    if user_signed_in?
+      @cart = current_user.cart
+      redirect_to cart_path, alert: 'カートが空です。' if @cart.empty?
+    else
+      # ゲストユーザーの場合、ログインを促す
+      redirect_to new_user_session_path, alert: '注文するにはログインが必要です。'
+    end
   end
 
   def create

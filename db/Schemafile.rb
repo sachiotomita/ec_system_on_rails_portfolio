@@ -1,7 +1,7 @@
 # データベーススキーマ定義ファイル
 # ridgepoleを使用してスキーマを管理
 
-create_table :users, id: :serial, force: :cascade do |t|
+create_table :users, force: :cascade do |t|
   t.string :email, null: false, default: ""
   t.string :encrypted_password, null: false, default: ""
   t.string :first_name, null: false
@@ -22,7 +22,7 @@ end
 add_index :users, :email, unique: true
 add_index :users, :reset_password_token, unique: true
 
-create_table :categories, id: :serial, force: :cascade do |t|
+create_table :categories, force: :cascade do |t|
   t.string :name, null: false
   t.text :description
   t.string :slug, null: false
@@ -33,7 +33,7 @@ end
 add_index :categories, :slug, unique: true
 add_index :categories, :active
 
-create_table :products, id: :serial, force: :cascade do |t|
+create_table :products, force: :cascade do |t|
   t.string :name, null: false
   t.text :description
   t.text :short_description
@@ -54,7 +54,7 @@ add_index :products, :active
 add_index :products, :featured
 add_index :products, :category_id
 
-create_table :product_images, id: :serial, force: :cascade do |t|
+create_table :product_images, force: :cascade do |t|
   t.integer :product_id, null: false
   t.string :image, null: false
   t.string :alt_text
@@ -66,14 +66,14 @@ end
 add_index :product_images, :product_id
 add_index :product_images, :position
 
-create_table :carts, id: :serial, force: :cascade do |t|
+create_table :carts, force: :cascade do |t|
   t.integer :user_id, null: false
   t.timestamps null: false
 end
 
 add_index :carts, :user_id, unique: true
 
-create_table :cart_items, id: :serial, force: :cascade do |t|
+create_table :cart_items, force: :cascade do |t|
   t.integer :cart_id, null: false
   t.integer :product_id, null: false
   t.integer :quantity, null: false, default: 1
@@ -84,7 +84,7 @@ add_index :cart_items, :cart_id
 add_index :cart_items, :product_id
 add_index :cart_items, [:cart_id, :product_id], unique: true
 
-create_table :orders, id: :serial, force: :cascade do |t|
+create_table :orders, force: :cascade do |t|
   t.integer :user_id, null: false
   t.string :order_number, null: false
   t.decimal :subtotal, precision: 10, scale: 2, null: false
@@ -105,7 +105,7 @@ add_index :orders, :user_id
 add_index :orders, :order_number, unique: true
 add_index :orders, :status
 
-create_table :order_items, id: :serial, force: :cascade do |t|
+create_table :order_items, force: :cascade do |t|
   t.integer :order_id, null: false
   t.integer :product_id, null: false
   t.string :product_name, null: false

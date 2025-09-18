@@ -10,7 +10,7 @@ class Order < ApplicationRecord
   before_validation :generate_order_number, on: :create
   before_validation :calculate_totals
 
-  enum status: {
+  enum :status, {
     pending: 'pending',
     processing: 'processing',
     shipped: 'shipped',
@@ -18,8 +18,8 @@ class Order < ApplicationRecord
     cancelled: 'cancelled'
   }
 
-  enum payment_status: {
-    pending: 'pending',
+  enum :payment_status, {
+    payment_pending: 'pending',
     paid: 'paid',
     failed: 'failed',
     refunded: 'refunded'
