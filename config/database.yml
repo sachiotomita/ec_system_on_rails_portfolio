@@ -22,22 +22,22 @@ default: &default
 
 development:
   <<: *default
-  database: ec_fullscratch_on_rails_portfolio_development
-  username: postgres
-  password: password
-  host: db
-  port: 5432
+  database: <%= ENV.fetch("DB_NAME", "ec_fullscratch_on_rails_portfolio_development") %>
+  username: <%= ENV.fetch("DB_USERNAME", "postgres") %>
+  password: <%= ENV.fetch("DB_PASSWORD", "password") %>
+  host: <%= ENV.fetch("DB_HOST", "db") %>
+  port: <%= ENV.fetch("DB_PORT", "5432") %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: ec_fullscratch_on_rails_portfolio_test
-  username: postgres
-  password: password
-  host: db
-  port: 5432
+  database: <%= ENV.fetch("DB_NAME_TEST", "ec_fullscratch_on_rails_portfolio_test") %>
+  username: <%= ENV.fetch("DB_USERNAME", "postgres") %>
+  password: <%= ENV.fetch("DB_PASSWORD", "password") %>
+  host: <%= ENV.fetch("DB_HOST", "db") %>
+  port: <%= ENV.fetch("DB_PORT", "5432") %>
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is

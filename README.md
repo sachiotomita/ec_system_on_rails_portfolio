@@ -34,14 +34,23 @@ git clone <repository-url>
 cd ec_fullscratch_on_rails_portfolio
 ```
 
-2. 初回セットアップを実行
+2. 環境変数を設定（オプション）
+```bash
+# .env_sampleファイルをコピーして.envファイルを作成
+cp .env_sample .env
+
+# 必要に応じて.envファイルを編集
+# デフォルトの設定でDocker Composeを使用する場合はこの手順は不要
+```
+
+3. 初回セットアップを実行
 ```bash
 make setup
 # または
 ./bin/docker-setup
 ```
 
-3. アプリケーションにアクセス
+4. アプリケーションにアクセス
 - アプリケーション: http://localhost:3000
 - データベース: localhost:5432
 - Redis: localhost:6379
@@ -113,6 +122,42 @@ make console
 # テストを実行
 make test
 ```
+
+## 環境変数
+
+このプロジェクトでは`dotenv-rails` gemを使用して環境変数を管理しています。
+
+### 環境変数の設定
+
+1. `.env_sample`ファイルをコピーして`.env`ファイルを作成
+```bash
+cp .env_sample .env
+```
+
+2. `.env`ファイルを編集して、実際の値を設定
+```bash
+# データベース設定
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=ec_fullscratch_on_rails_portfolio_development
+DB_USERNAME=postgres
+DB_PASSWORD=your_password
+
+# その他の設定...
+```
+
+### 主要な環境変数
+
+| 変数名 | 説明 | デフォルト値 |
+|--------|------|-------------|
+| `DB_HOST` | データベースホスト | `db` |
+| `DB_PORT` | データベースポート | `5432` |
+| `DB_NAME` | データベース名 | `ec_fullscratch_on_rails_portfolio_development` |
+| `DB_USERNAME` | データベースユーザー名 | `postgres` |
+| `DB_PASSWORD` | データベースパスワード | `password` |
+| `REDIS_URL` | Redis URL | `redis://redis:6379/0` |
+| `APP_NAME` | アプリケーション名 | `EC Portfolio Store` |
+| `APP_URL` | アプリケーションURL | `http://localhost:3000` |
 
 ## テスト用アカウント
 

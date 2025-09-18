@@ -34,6 +34,15 @@ services:
       - RAILS_ENV=development
       - DATABASE_URL=postgres://postgres:password@db:5432/ec_fullscratch_on_rails_portfolio_development
       - REDIS_URL=redis://redis:6379/0
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=ec_fullscratch_on_rails_portfolio_development
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=password
+      - APP_NAME=EC Portfolio Store
+      - APP_URL=http://localhost:3000
+      - DEBUG=true
+      - CACHE_ENABLED=false
     depends_on:
       - db
       - redis
