@@ -123,3 +123,13 @@
     </div>
   </div>
 </div>
+
+<script>
+  // 注文完了時にカートバッジを更新
+  document.addEventListener('DOMContentLoaded', function() {
+    // カートバッジを更新
+    if (typeof updateCartBadge === 'function') {
+      updateCartBadge();
+    }
+  });
+</script>

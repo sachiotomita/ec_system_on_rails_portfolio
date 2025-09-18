@@ -70,14 +70,10 @@
                 <% end %>
                 
                 <% if product.in_stock? %>
-                  <%= form_with url: cart_add_item_path, method: :post, local: true, class: "w-full" do |f| %>
-                    <%= f.hidden_field :product_id, value: product.id %>
-                    <%= f.hidden_field :quantity, value: 1 %>
-                    <%= f.submit "カートに追加", class: "btn-primary btn-sm w-full flex items-center justify-center" do %>
-                      <%= icon('shopping-cart', size: 16, class_name: "mr-2 w-4 h-4") %>
-                      カートに追加
-                    <% end %>
-                  <% end %>
+                  <button onclick="addToCart(<%= product.id %>)" class="btn-primary btn-sm w-full flex items-center justify-center">
+                    <%= icon('shopping-cart', size: 16, class_name: "mr-2 w-4 h-4") %>
+                    カートに追加
+                  </button>
                 <% else %>
                   <button class="btn-secondary btn-sm w-full flex items-center justify-center" disabled>
                     <%= icon('x-mark', size: 16, class_name: "mr-2 w-4 h-4") %>

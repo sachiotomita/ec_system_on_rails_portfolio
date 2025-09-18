@@ -63,6 +63,8 @@ end
 electronics_category = Category.find_by(name: 'エレクトロニクス')
 fashion_category = Category.find_by(name: 'ファッション')
 home_category = Category.find_by(name: 'ホーム&キッチン')
+sports_category = Category.find_by(name: 'スポーツ&アウトドア')
+books_category = Category.find_by(name: '本&メディア')
 
 products = [
   {
@@ -113,6 +115,64 @@ products = [
     stock_quantity: 15,
     category: home_category,
     featured: true
+  },
+  # スポーツ&アウトドアカテゴリの商品
+  {
+    name: 'ヨガマット プロ',
+    description: '高品質なTPE素材を使用した滑りにくいヨガマット。厚さ6mmで快適な練習ができます。',
+    short_description: '高品質ヨガマット',
+    price: 4500,
+    sku: 'YOGA-MAT-PRO-001',
+    stock_quantity: 80,
+    category: sports_category,
+    featured: true
+  },
+  {
+    name: '登山用リュックサック 40L',
+    description: '軽量で耐久性の高い登山用リュックサック。複数のポケットと快適な背負い心地を実現。',
+    short_description: '登山用リュックサック',
+    price: 12000,
+    sku: 'HIKING-BACKPACK-40L-001',
+    stock_quantity: 25,
+    category: sports_category
+  },
+  {
+    name: 'ランニングシューズ エアマックス',
+    description: '快適なクッション性と軽量性を兼ね備えたランニングシューズ。',
+    short_description: 'ランニングシューズ',
+    price: 18000,
+    sku: 'RUNNING-SHOES-AIRMAX-001',
+    stock_quantity: 60,
+    category: sports_category
+  },
+  # 本&メディアカテゴリの商品
+  {
+    name: 'プログラミング入門書',
+    description: '初心者向けのプログラミング学習書。実践的な例題と丁寧な解説で基礎から学べます。',
+    short_description: 'プログラミング入門書',
+    price: 2800,
+    sku: 'PROGRAMMING-BOOK-001',
+    stock_quantity: 100,
+    category: books_category,
+    featured: true
+  },
+  {
+    name: 'Bluetooth ワイヤレスイヤホン',
+    description: '高音質で長時間使用可能なBluetoothイヤホン。ノイズキャンセリング機能付き。',
+    short_description: 'Bluetoothイヤホン',
+    price: 8500,
+    sku: 'BLUETOOTH-EARPHONES-001',
+    stock_quantity: 40,
+    category: books_category
+  },
+  {
+    name: 'Kindle Paperwhite',
+    description: '目に優しい電子書籍リーダー。防水機能付きでどこでも読書を楽しめます。',
+    short_description: 'Kindle Paperwhite',
+    price: 15000,
+    sku: 'KINDLE-PAPERWHITE-001',
+    stock_quantity: 30,
+    category: books_category
   }
 ]
 
@@ -138,6 +198,18 @@ products.each do |product_data|
     'muji-sofa'
   when 'Dyson V15 Detect'
     'dyson-v15-detect'
+  when 'ヨガマット プロ'
+    'yoga-mat-pro'
+  when '登山用リュックサック 40L'
+    'hiking-backpack-40l'
+  when 'ランニングシューズ エアマックス'
+    'running-shoes-airmax'
+  when 'プログラミング入門書'
+    'programming-book'
+  when 'Bluetooth ワイヤレスイヤホン'
+    'bluetooth-earphones'
+  when 'Kindle Paperwhite'
+    'kindle-paperwhite'
   else
     product_data[:name].parameterize
   end
@@ -215,6 +287,72 @@ products.each do |product_data|
     product.product_images.create!(
       image: 'https://picsum.photos/400/300?random=11',
       alt_text: 'Dyson V15 Detect アクセサリー',
+      position: 2,
+      primary: false
+    )
+  when 'ヨガマット プロ'
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=12',
+      alt_text: 'ヨガマット プロ',
+      position: 1,
+      primary: true
+    )
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=13',
+      alt_text: 'ヨガマット プロ 詳細',
+      position: 2,
+      primary: false
+    )
+  when '登山用リュックサック 40L'
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=14',
+      alt_text: '登山用リュックサック 40L',
+      position: 1,
+      primary: true
+    )
+  when 'ランニングシューズ エアマックス'
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=15',
+      alt_text: 'ランニングシューズ エアマックス',
+      position: 1,
+      primary: true
+    )
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=16',
+      alt_text: 'ランニングシューズ エアマックス サイド',
+      position: 2,
+      primary: false
+    )
+  when 'プログラミング入門書'
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=17',
+      alt_text: 'プログラミング入門書',
+      position: 1,
+      primary: true
+    )
+  when 'Bluetooth ワイヤレスイヤホン'
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=18',
+      alt_text: 'Bluetooth ワイヤレスイヤホン',
+      position: 1,
+      primary: true
+    )
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=19',
+      alt_text: 'Bluetooth ワイヤレスイヤホン ケース',
+      position: 2,
+      primary: false
+    )
+  when 'Kindle Paperwhite'
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=20',
+      alt_text: 'Kindle Paperwhite',
+      position: 1,
+      primary: true
+    )
+    product.product_images.create!(
+      image: 'https://picsum.photos/400/300?random=21',
+      alt_text: 'Kindle Paperwhite 背面',
       position: 2,
       primary: false
     )

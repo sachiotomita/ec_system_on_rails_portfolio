@@ -45,14 +45,32 @@ class CartController < ApplicationController
 
     @cart.update_quantity(product, quantity)
     @cart.save_to_session(session) unless user_signed_in?
-    redirect_to cart_path, notice: 'カートを更新しました。'
+    
+    if request.xhr?
+      render json: { 
+        success: true, 
+        message: 'カートを更新しました。',
+        cart_count: @cart.total_items
+      }
+    else
+      redirect_to cart_path, notice: 'カートを更新しました。'
+    end
   end
 
   def remove_item
     product = Product.find(params[:product_id])
     @cart.remove_product(product)
     @cart.save_to_session(session) unless user_signed_in?
-    redirect_to cart_path, notice: '商品をカートから削除しました。'
+    
+    if request.xhr?
+      render json: { 
+        success: true, 
+        message: '商品をカートから削除しました。',
+        cart_count: @cart.total_items
+      }
+    else
+      redirect_to cart_path, notice: '商品をカートから削除しました。'
+    end
   end
 
   def clear
@@ -62,7 +80,16 @@ class CartController < ApplicationController
       @cart.session_items.clear
       @cart.save_to_session(session)
     end
-    redirect_to cart_path, notice: 'カートを空にしました。'
+    
+    if request.xhr?
+      render json: { 
+        success: true, 
+        message: 'カートを空にしました。',
+        cart_count: @cart.total_items
+      }
+    else
+      redirect_to cart_path, notice: 'カートを空にしました。'
+    end
   end
 
   def count

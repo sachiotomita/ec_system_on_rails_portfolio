@@ -42,11 +42,10 @@
                   </div>
                   
                   <div>
-                    <%= link_to cart_remove_item_path(product_id: item.product.id), method: :delete, 
-                                class: "text-red-600 hover:text-red-800 p-2", 
-                                data: { confirm: "この商品をカートから削除しますか？" } do %>
+                    <button onclick="removeFromCart(<%= item.product.id %>)" 
+                            class="text-red-600 hover:text-red-800 p-2">
                       <%= icon('trash', size: 12, class_name: "w-5 h-5") %>
-                    <% end %>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -59,12 +58,10 @@
             <%= icon('arrow-left', size: 12, class_name: "mr-2 w-5 h-5") %>
             買い物を続ける
           <% end %>
-          <%= link_to cart_clear_path, method: :delete, 
-                      class: "btn-danger flex items-center", 
-                      data: { confirm: "カートを空にしますか？" } do %>
+          <button onclick="clearCart()" class="btn-danger flex items-center">
             <%= icon('trash', size: 12, class_name: "mr-2 w-5 h-5") %>
             カートを空にする
-          <% end %>
+          </button>
         </div>
       </div>
       

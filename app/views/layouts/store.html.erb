@@ -155,11 +155,11 @@
     <% if notice %>
       <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 flex items-center justify-between" role="alert">
         <div class="flex items-center">
-          <%= icon('check', size: 12, class_name: "mr-2") %>
+          <%= icon('check', size: 20, class_name: "mr-2") %>
           <%= notice %>
         </div>
         <button type="button" class="text-green-400 hover:text-green-600" onclick="this.parentElement.style.display='none'">
-          <%= icon('x-mark', size: 12) %>
+          <%= icon('x-mark', size: 20) %>
         </button>
       </div>
     <% end %>
@@ -167,11 +167,11 @@
     <% if alert %>
       <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 flex items-center justify-between" role="alert">
         <div class="flex items-center">
-          <%= icon('exclamation-triangle', size: 12, class_name: "mr-2") %>
+          <%= icon('exclamation-triangle', size: 20, class_name: "mr-2") %>
           <%= alert %>
         </div>
         <button type="button" class="text-red-400 hover:text-red-600" onclick="this.parentElement.style.display='none'">
-          <%= icon('x-mark', size: 12) %>
+          <%= icon('x-mark', size: 20) %>
         </button>
       </div>
     <% end %>
@@ -259,7 +259,7 @@
         }
       });
 
-      // カートバッジの更新
+      // カートバッジの更新（APIから取得）
       function updateCartBadge() {
         fetch('/cart/count', {
           method: 'GET',
@@ -270,24 +270,39 @@
         })
         .then(response => response.json())
         .then(data => {
-          const cartBadge = document.getElementById('cart-badge');
-          const mobileCartBadge = document.getElementById('mobile-cart-badge');
-          
-          if (data.count > 0) {
-            cartBadge.textContent = data.count;
-            cartBadge.classList.remove('hidden');
-            mobileCartBadge.textContent = data.count;
-            mobileCartBadge.classList.remove('hidden');
-          } else {
-            cartBadge.classList.add('hidden');
-            mobileCartBadge.classList.add('hidden');
-          }
+          updateCartBadgeCount(data.count);
         })
         .catch(error => console.error('Error:', error));
       }
 
-      // ページ読み込み時にカートバッジを更新
+      // カートバッジの表示更新（直接カウント指定）
+      function updateCartBadgeCount(count) {
+        const cartBadge = document.getElementById('cart-badge');
+        const mobileCartBadge = document.getElementById('mobile-cart-badge');
+        
+        if (count > 0) {
+          cartBadge.textContent = count;
+          cartBadge.classList.remove('hidden');
+          mobileCartBadge.textContent = count;
+          mobileCartBadge.classList.remove('hidden');
+        } else {
+          cartBadge.classList.add('hidden');
+          mobileCartBadge.classList.add('hidden');
+        }
+      }
+
+      // ページ読み込み・遷移時にカートバッジを更新
       document.addEventListener('DOMContentLoaded', function() {
+        updateCartBadge();
+      });
+
+      // Turbo対応：ページ遷移時にもカートバッジを更新
+      document.addEventListener('turbo:load', function() {
+        updateCartBadge();
+      });
+
+      // フォールバック：ページ表示時にも更新
+      document.addEventListener('turbo:render', function() {
         updateCartBadge();
       });
 
@@ -310,8 +325,8 @@
           if (data.success) {
             // 成功メッセージを表示
             showNotification('商品をカートに追加しました', 'success');
-            // カートバッジを更新
-            updateCartBadge();
+            // カートバッジを即座に更新
+            updateCartBadgeCount(data.cart_count);
           } else {
             showNotification(data.message || 'エラーが発生しました', 'error');
           }
@@ -320,6 +335,69 @@
           console.error('Error:', error);
           showNotification('エラーが発生しました', 'error');
         });
+      }
+
+      // カートから商品を削除
+      function removeFromCart(productId) {
+        if (confirm('この商品をカートから削除しますか？')) {
+          const formData = new FormData();
+          formData.append('product_id', productId);
+          formData.append('authenticity_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+          fetch('/cart/remove_item', {
+            method: 'DELETE',
+            body: formData,
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              showNotification(data.message, 'success');
+              updateCartBadgeCount(data.cart_count);
+              // ページをリロードしてカート内容を更新
+              location.reload();
+            } else {
+              showNotification(data.message || 'エラーが発生しました', 'error');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            showNotification('エラーが発生しました', 'error');
+          });
+        }
+      }
+
+      // カートを空にする
+      function clearCart() {
+        if (confirm('カートを空にしますか？')) {
+          const formData = new FormData();
+          formData.append('authenticity_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+          fetch('/cart/clear', {
+            method: 'DELETE',
+            body: formData,
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              showNotification(data.message, 'success');
+              updateCartBadgeCount(data.cart_count);
+              // ページをリロードしてカート内容を更新
+              location.reload();
+            } else {
+              showNotification(data.message || 'エラーが発生しました', 'error');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            showNotification('エラーが発生しました', 'error');
+          });
+        }
       }
 
       // 通知表示
